@@ -221,4 +221,5 @@ $ composer cs-fix
 # Run PHPUnit tests:
 $ composer test
 ```
+Dont forget to run composer install after checkout
 # newkemperadmin
