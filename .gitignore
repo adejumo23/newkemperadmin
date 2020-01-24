@@ -3,3 +3,4 @@ data/cache/*
 !data/cache/.gitkeep
 phpunit.xml
 config/database.config.php
+/.idea/*
