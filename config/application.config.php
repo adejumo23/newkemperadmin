@@ -8,7 +8,7 @@
 return [
     // Retrieve list of modules used in this application.
     'modules' => require __DIR__ . '/modules.config.php',
-
+    'database_config' => require __DIR__ . '/database.config.php',
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => [
         

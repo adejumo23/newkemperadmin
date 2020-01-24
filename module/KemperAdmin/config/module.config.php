@@ -19,22 +19,12 @@ return [
                     ],
                 ],
             ],
-            'kemperadmin' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/kemperadmin[/:action]',
-                    'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-            ],
-            'kemperadmin:reports:literal' => [
+            'kemperadmin:login' => [
                 'type'    => Literal::class,
                 'options' => [
-                    'route'    => '/kemperadmin/reports[/:action]',
+                    'route'    => '/login',
                     'defaults' => [
-                        'controller' => Controller\ReportController::class,
+                        'controller' => Controller\LoginController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -42,7 +32,7 @@ return [
             'kemperadmin:reports' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/kemperadmin/reports[/:action]',
+                    'route'    => '/reports[/:action]',
                     'defaults' => [
                         'controller' => Controller\ReportController::class,
                         'action'     => 'index',
@@ -54,6 +44,7 @@ return [
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => InvokableFactory::class,
+            Controller\LoginController::class => InvokableFactory::class,
             Controller\ReportController::class => InvokableFactory::class,
         ],
     ],

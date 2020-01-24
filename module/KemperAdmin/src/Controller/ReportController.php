@@ -5,27 +5,24 @@
  */
 
 namespace KemperAdmin\Controller;
-use Zend\Mvc\Controller\AbstractActionController;
+use App\AbstractAppController;
+use App\Model\Service\UserService;
+use KemperAdmin\Model\Service\ReportService;
 use Zend\View\Model\ViewModel;
 
 use Zend\Db\Adapter;
 
-class ReportController extends AbstractActionController
+class ReportController extends AbstractAppController
 {
 
 
     public function indexAction()
     {
-//        $conn = new Adapter\Driver\Sqlsrv\Connection();
-//        $conn->connect();
-//        $result = $conn->execute($query);
-//        while ($row = $result->next()) {
-//            $data[] = $row;
-//        }
-        $data = [
-            'blah',
-            'blah',
-        ];
-        return new ViewModel(['template' => 'kemperadmin/report/index'], ['data' => $data]);
+        $identity = $this->getIdentity();
+        $username = $identity->getUsername();
+        $reportService = new ReportService();
+        $reportData = $reportService->calcReportDataForUser($username);
+
+        return new ViewModel(['template' => 'kemperadmin/report/index'], ['data' => $reportData]);
     }
 }

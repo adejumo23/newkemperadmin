@@ -28,7 +28,8 @@
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
-            "KemperAdmin\\": "module/KemperAdmin/src/"
+            "KemperAdmin\\": "module/KemperAdmin/src/",
+            "App\\": "module/App/src/"
         }
     },
     "autoload-dev": {
