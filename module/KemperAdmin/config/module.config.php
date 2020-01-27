@@ -29,6 +29,16 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:api' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/api',
+                    'defaults' => [
+                        'controller' => Controller\ApiController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'kemperadmin:reports' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -46,6 +56,7 @@ return [
             Controller\IndexController::class => InvokableFactory::class,
             Controller\LoginController::class => InvokableFactory::class,
             Controller\ReportController::class => InvokableFactory::class,
+            Controller\ApiController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [
