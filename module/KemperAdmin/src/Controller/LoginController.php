@@ -22,8 +22,8 @@ class LoginController extends AbstractActionController
         $pass = 'abc';
         $userService = new UserService();
         $result = $userService->authenticateUser($user, $pass);
-        print_r($result);
-        exit();
+//        print_r($result);
+        $this->redirect()->toRoute('kemperadmin:api', []);
     }
 
 }
