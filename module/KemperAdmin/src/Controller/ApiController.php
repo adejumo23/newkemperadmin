@@ -30,7 +30,9 @@ class ApiController extends AbstractAppController
         self::REPRESENTATIVES => [
             'url' => 'https://data.simtraction.com/compliance/representatives',
             'options' => [
-                'headers' => [],
+                'headers' => [
+
+                ],
                 'body' => [
                     "OpenClosed" => 1,
                     "Producer" => 1,
@@ -90,7 +92,9 @@ class ApiController extends AbstractAppController
         try {
             $token = $this->getToken();
             $options['headers']['content-type'] = 'application/json';
-            $options['body']['user-token'] = $token;
+            $options['headers']['user-token'] = $token;
+            $body = json_encode($options['body']);
+            $options['body'] = $body;
             //$options['headers']['user-token'] = $token;               //This line if they need it in headers
             return $this->getClient()->request($method, $url, $options);
         } catch (Throwable $e) {
@@ -105,8 +109,8 @@ class ApiController extends AbstractAppController
             $client = $this->getClient();
             $endpoint = $this->getConnectionInfo(self::LOGIN);
             $url = $endpoint['url'];
-            $body = $endpoint['body'];
-            $headers = array_merge($endpoint['headers'], $this->defaultHeaders);
+            $body = json_encode($endpoint['options']['body']);
+            $headers = array_merge($endpoint['options']['headers'], $this->defaultHeaders);
             $result = $client->request('POST', $url, [
                 'headers' => $headers,
                 'body' => $body,
