@@ -7,125 +7,135 @@
 namespace KemperAdmin\Controller;
 
 use App\AbstractAppController;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
+use Throwable;
+use Zend\View\Model\ViewModel;
 
 class ApiController extends AbstractAppController
 {
+    const LOGIN = 'login';
+    const REPRESENTATIVES = 'representatives';
     protected $connectionInfo = [
-        'auth' => [
+        self::LOGIN => [
             'url' => 'https://data.simtraction.com/security/authorize',
-            'body' => [
-                'user' => '',
-                'password' => '',
+            'options' => [
+                'headers' => [],
+                'body' => [
+                    "user" => "idavis",
+                    "password" => "RNic2020kh!",
+                ],
             ],
         ],
-        'repEndpoint' => [
-            'url' => 'https://data.simtraction.com/security/authorize',
-            'headers' => [
-                'user-token' => '',
-                'content-type' => 'application/json',
-            ],
-            'body' => [
-                "user"=>"idavis",
-                "password"=> "RNic2020kh!",
-                "OpenClosed" => 1,
-                "Producer" => 1,
-                "StartDate" => "1/1/2020",
-                "EndDate" => "1/31/2020",
-                "CompanyID" => 1,
-                "BranchID" => "",
+        self::REPRESENTATIVES => [
+            'url' => 'https://data.simtraction.com/compliance/representatives',
+            'options' => [
+                'headers' => [],
+                'body' => [
+                    "OpenClosed" => 1,
+                    "Producer" => 1,
+                    "StartDate" => "1/1/2020",
+                    "EndDate" => "1/31/2020",
+                    "CompanyID" => 1,
+                    "BranchID" => "",
+                ],
             ]
             ,
         ],
     ];
-    protected $connectionInfoFinal = [
-        'auth' => [
-            'url' => 'https://data.simtraction.com/compliance/representatives',
-            'body' => [
-                'user' => '',
-                'password' => '',
-            ],
-        ],
-        'repEndpoint' => [
-            'url' => 'https://data.simtraction.com/compliance/representatives',
-            'headers' => [
-                'user-token' => '',
-                'content-type' => 'application/json',
-            ],
-            'body' => [
-                "OpenClosed" => 1,
-                "Producer" => 1,
-                "StartDate" => "1/1/2020",
-                "EndDate" => "1/31/2020",
-                "CompanyID" => 1,
-                "BranchID" => "",
-            ]
-            ,
-        ],
+    private $defaultHeaders = [
+        'content-type' => 'application/json',
     ];
     /**
-     * @return void|\Zend\View\Model\ViewModel
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @return void|ViewModel
      */
     public function indexAction()
     {
-//        $username = '';
-//        $pass = '';
-//        $token = $this->getToken($username, $pass);
-
         $reps = $this->getRepresentatives();
         echo "<pre>";
         print_r($reps);
         exit();
     }
 
-    protected function getToken($username, $password)
-    {
-        //Todo: Implement if needed
-    }
-
+    /**
+     * @return mixed
+     */
     protected function getRepresentatives()
     {
-        $auth = [
-            "user"=>"idavis",
-            "password"=> "RNic2020kh!"
-        ];
-        $newAuth = json_encode($auth);
-        $result = [];
+        $endpoint = $this->getConnectionInfo(self::REPRESENTATIVES);
+        $url = $endpoint['url'];
+        $options = $endpoint['options'];
+        $result = $this->doRequest('POST', $url, $options);
+        return $this->getFromResult($result);
+    }
+
+    private function getConnectionInfo($endpoint)
+    {
+        return $this->connectionInfo[$endpoint];
+    }
+
+    /**
+     * @param $method
+     * @param $url
+     * @param $options
+     * @return ResponseInterface
+     */
+    private function doRequest($method, $url, $options)
+    {
         try {
-            $client = new Client(['defaults' => [
-                'verify' => false,
-            ]]);
-            $endpoint = $this->connectionInfo['repEndpoint'];
+            $token = $this->getToken();
+            $options['headers']['content-type'] = 'application/json';
+            $options['body']['user-token'] = $token;
+            //$options['headers']['user-token'] = $token;               //This line if they need it in headers
+            return $this->getClient()->request($method, $url, $options);
+        } catch (Throwable $e) {
+            error_log("PHP Error: API Request Failed: " . $e->getMessage() . $e->getTraceAsString());
+            die("Error");
+        }
+    }
+
+    protected function getToken()
+    {
+        try {
+            $client = $this->getClient();
+            $endpoint = $this->getConnectionInfo(self::LOGIN);
             $url = $endpoint['url'];
-            $body = json_encode($endpoint['body']);
+            $body = $endpoint['body'];
+            $headers = array_merge($endpoint['headers'], $this->defaultHeaders);
             $result = $client->request('POST', $url, [
-                'headers' => [
-                    'user-token' => 'asasdfasdasd',
-                    'content-type' => 'application/json',
-                ],
+                'headers' => $headers,
                 'body' => $body,
             ]);
+            return $this->getFromResult($result, 'SecurityToken');
+        } catch (Throwable $e) {
+            error_log("PHP Error: API Login Failed: " . $e->getMessage() . $e->getTraceAsString());
+            die("Error");
+        }
+    }
 
-            $result = $result->getBody();
+    private function getClient()
+    {
+        if (!$this->client) {
+            $this->client = new Client(['defaults' => ['verify' => false,]]);
+        }
+        return $this->client;
+    }
 
-        $result = json_decode((string)$result,true);
-        $token = $result['SecurityToken'];
-        $endpointFinal= $this->connectionInfoFinal['repEndpoint'];
-        $url = $endpointFinal['url'];
-        $body = json_encode($endpoint['body']);
-        $result = $client->request('POST', $url, [
-            'headers' => [
-                'user-token' => $token,
-                'content-type' => 'application/json',
-            ],
-            'body' => $body,
-        ]);
-
-
-        $result = $result->getBody()->getContents();
-        } catch (\Throwable $e) {
-            error_log("PHP Error: " . $e->getMessage() . $e->getTraceAsString());
+    /**
+     * @param ResponseInterface $result
+     * @param string $key
+     * @return mixed
+     */
+    private function getFromResult($result, $key = null)
+    {
+        $result = json_decode((string)$result->getBody()->getContents(), true);
+        if ($key) {
+            return $result[$key];
         }
         return $result;
     }
