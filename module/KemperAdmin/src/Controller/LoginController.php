@@ -18,7 +18,7 @@ class LoginController extends AbstractActionController
      */
     public function indexAction()
     {
-        $user = 'raj';
+        $user = 'id';
         $pass = 'abc';
         $userService = new UserService();
         $result = $userService->authenticateUser($user, $pass);
