@@ -27,8 +27,8 @@ class ApiController extends AbstractAppController
                 'content-type' => 'application/json',
             ],
             'body' => [
-                    "user"=>"idavis",
-                    "password"=> "RNic2020kh!",
+                "user"=>"idavis",
+                "password"=> "RNic2020kh!",
                 "OpenClosed" => 1,
                 "Producer" => 1,
                 "StartDate" => "1/1/2020",
@@ -108,9 +108,7 @@ class ApiController extends AbstractAppController
             ]);
 
             $result = $result->getBody();
-        } catch (\Throwable $e) {
-            error_log("PHP Error: " . $e->getMessage() . $e->getTraceAsString());
-        }
+
         $result = json_decode((string)$result,true);
         $token = $result['SecurityToken'];
         $endpointFinal= $this->connectionInfoFinal['repEndpoint'];
@@ -125,8 +123,12 @@ class ApiController extends AbstractAppController
         ]);
 
 
-         $result = $result->getBody()->getContents();
+        $result = $result->getBody()->getContents();
+        } catch (\Throwable $e) {
+            error_log("PHP Error: " . $e->getMessage() . $e->getTraceAsString());
+        }
         return $result;
     }
 
 }
+
