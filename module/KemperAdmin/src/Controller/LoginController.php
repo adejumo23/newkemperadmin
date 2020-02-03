@@ -8,22 +8,37 @@ namespace KemperAdmin\Controller;
 
 
 use App\Model\Service\UserService;
+use App\Request\RequestInterface;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class LoginController extends AbstractActionController
 {
 
     /**
-     * @return void|\Zend\View\Model\ViewModel
+     * @var RequestInterface
+     */
+    protected $request;
+    /**
+     * @return \Zend\View\Model\ViewModel
      */
     public function indexAction()
     {
-        $user = 'id';
-        $pass = 'abc';
+        return new ViewModel();
+    }
+
+    public function loginAction()
+    {
+        $user = $this->request->getPost('username');
+        $pass = $this->request->getPost('password');
+
         $userService = new UserService();
         $result = $userService->authenticateUser($user, $pass);
-//        print_r($result);
-        $this->redirect()->toRoute('kemperadmin:api', []);
+
+        if ($result) {
+            return new ViewModel($result);
+        }
+        $this->redirect()->toRoute('kemperadmin:conservation', []);
     }
 
 }

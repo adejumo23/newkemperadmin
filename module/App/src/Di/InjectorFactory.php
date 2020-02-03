@@ -38,9 +38,17 @@ class InjectorFactory
                     throw  new \Exception('Class not found for property injection: ' . $className);
                 }
             }
+            $this->init($classObject);
             return $classObject;
         }
         throw  new \Exception('Class not found for injection: ' . $className);
+    }
+
+    private function init(&$classObject)
+    {
+        if ($classObject instanceof InjectableInterface) {
+            $classObject->setDi($this);
+        }
     }
 
 }

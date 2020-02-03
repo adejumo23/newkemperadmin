@@ -1,0 +1,39 @@
+<?php
+
+foreach($disposerArray as $data => $information):
+    ?>
+    <a class="dropdown-item chartDisposerItem" href="#" data-chart-disposer="<?=$information['disposer_id']?>"><?=$information['disposer_description']?></a>
+<?php
+endforeach;
+?>
+<script>
+    $(document).ready(function filterDisposerData(){
+        $('#earningVsDisposition').remove(); // this is my <canvas> element
+        $('.chart-area').append('<canvas id="earningVsDisposition"><canvas>');
+        var disposerId = $(this).data('chart-disposer');
+        var url = "grabDisposerFilterData.php";
+        var data ={'disposerId' :disposerId};
+        $.post(url, data,function(response) {
+            response = JSON.parse(response);
+            if (response.status === '') {
+                alert('Your Customer Service Rep Conserved no premiums so far');
+            }
+            else{
+                showChartData(response);
+            }
+        });
+    });
+    $(document).ready(function dispositionChart(){
+        var url = "grabDispositions.php";
+        var dummyData = "activeDispositions";
+        var data = {'activeDispositions':dummyData};
+        $.get(url,data,function(response){
+            response = JSON.parse(response);
+            if(response.status === 'data'){
+                renderDispositionChart(response.dataset,response.labels)
+            }
+        });
+
+    });
+</script>
+<script type="text/javascript" src="filter-dropdown-item.js"></script>

@@ -6,24 +6,34 @@
 
 namespace App;
 use App\Auth\Identity;
+use App\Di\InjectorFactory;
 use App\Model\Service\UserService;
 use mysql_xdevapi\Exception;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
-
+use App\Request\RequestInterface as Request;
 
 /**
  * @property Identity|null identity
  */
-class AbstractAppController extends AbstractActionController
+class AbstractAppController extends AbstractActionController implements Di\InjectableInterface
 {
+
+    /**
+     * @var Request
+     */
+    protected $request;
 
     /**
      * @var AuthenticationService
      */
     protected $authService;
 
+    /**
+     * @var InjectorFactory
+     */
+    protected $di;
 
     /**
      * Register the default events for this controller
@@ -45,6 +55,7 @@ class AbstractAppController extends AbstractActionController
             throw new \Exception("Invalid Session. Please login again.");
         }
         $this->identity = $this->authService->getIdentity();
+        $this->setDi();
     }
 
     protected function getIdentity()
@@ -53,6 +64,30 @@ class AbstractAppController extends AbstractActionController
             return $this->plugin('identity');
         }
         return $this->identity;
+    }
+
+    /**
+     * @return InjectorFactory
+     */
+    public function getDi()
+    {
+        return $this->di;
+    }
+
+    /**
+     * @param InjectorFactory $di
+     * @return AbstractAppController
+     */
+    public function setDi($di = null)
+    {
+        if (!$this->di) {
+            if ($di) {
+                $this->di = $di;
+                return $this;
+            }
+            $this->di = new InjectorFactory();
+        }
+        return $this;
     }
 
 }

@@ -20,9 +20,9 @@ return [
                 ],
             ],
             'kemperadmin:login' => [
-                'type'    => Literal::class,
+                'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/login',
+                    'route'    => '/login[/:action]',
                     'defaults' => [
                         'controller' => Controller\LoginController::class,
                         'action'     => 'index',
@@ -49,6 +49,16 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:conservation' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/conservation',
+                    'defaults' => [
+                        'controller' => Controller\ConservationController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
@@ -57,6 +67,7 @@ return [
             Controller\LoginController::class => InvokableFactory::class,
             Controller\ReportController::class => InvokableFactory::class,
             Controller\ApiController::class => InvokableFactory::class,
+            Controller\ConservationController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [
@@ -68,7 +79,11 @@ return [
         'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'kemper-admin/index/index' => __DIR__ . '/../view/kemperadmin/index/index.phtml',
+            'kemper-admin/login/index' => __DIR__ . '/../view/kemperadmin/login/index.phtml',
+            'kemper-admin/login/login' => __DIR__ . '/../view/kemperadmin/login/login.phtml',
             'kemper-admin/report/index' => __DIR__ . '/../view/kemperadmin/report/index.phtml',
+            'kemper-admin/conservation/index' => __DIR__ . '/../view/kemperadmin/conservation/index.phtml',
+            'kemper-admin/conservation/chartdatafilterdropdown' => __DIR__ . '/../view/kemperadmin/conservation/chartDataFilterDropdown.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
