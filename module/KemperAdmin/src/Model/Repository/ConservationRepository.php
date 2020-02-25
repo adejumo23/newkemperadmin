@@ -11,12 +11,22 @@ use App\Model\Repository\AbstractRepository;
 
 class ConservationRepository extends AbstractRepository
 {
+    /**
+     * @var string
+     */
+    protected $addDueDateCondition;
+    /**
+     * @var array
+     */
+    protected $params;
 
-
-    public function getConservedPaidPremium($filter)
+    /**
+     * @param $filter
+     */
+    public function init($filter)
     {
-        $params = [];
-        $addDueDateCondition = '';
+        $this->params = [];
+        $this->addDueDateCondition = '';
         if ($filter) {
             $startingDate = $filter['startingDate'];
             $endingDate = $filter['endingDate'];
@@ -25,10 +35,14 @@ class ConservationRepository extends AbstractRepository
             $timeEnd = strtotime(str_replace(",", "", $endingDate));
             $endingDate = date('Y-m-d', $timeEnd);
 
-            $addDueDateCondition = " and bill_date between ? and ? ";
-
-            $params = [$startingDate, $endingDate];
+            $this->addDueDateCondition = " and bill_date between ? and ? ";
+            $this->params = [$startingDate, $endingDate];
         }
+
+    }
+
+    public function getConservedPaidPremium()
+    {
         $query = "select sum(b.ytd_premium) as premium from  (
                     select  distinct * from 
                     (
@@ -40,7 +54,7 @@ class ConservationRepository extends AbstractRepository
                         on policy_number = YTD_POL 
                         and due_date = CONVERT(DATE,CONVERT(VARCHAR,LEFT(convert(varchar,YTD_DUEDT),4) + '-' + SUBSTRING(CAST(YTD_DUEDT AS VARCHAR),5,2)+ '-' + RIGHT(convert(varchar,YTD_DUEDT),2)))
                         where [YTD_POL] is not null " .
-            $addDueDateCondition .
+            $this->addDueDateCondition .
             "
                         ) a group by 
                         ytd_policy_number,
@@ -49,7 +63,69 @@ class ConservationRepository extends AbstractRepository
                         ytd_mode 
                     ) b ";
 
-        return $this->executeQuery($query, $params);
+        return $this->executeQuery($query, $this->params);
+    }
+
+
+    /**
+     * @param mixed $filter
+     * @return \Zend\Db\Adapter\Driver\ResultInterface|null
+     */
+    public function getConservedPremium()
+    {
+        $query = <<<SQL
+select sum(premium) as premium from (
+                    select distinct * from (
+                    select policy_number as [policy number],
+                    due_date as [due date],
+                    monthly_premium as premium 
+                    from Bill190 left join rmcashytdmst0 
+                    on policy_number = YTD_POL 
+                    and due_date = CONVERT(DATE,CONVERT(VARCHAR,LEFT(convert(varchar,YTD_DUEDT),4) + '-' + SUBSTRING(CAST(YTD_DUEDT AS VARCHAR),5,2)+ '-' + RIGHT(convert(varchar,YTD_DUEDT),2)))
+                    where disposition_id in (14,5)
+            {$this->addDueDateCondition}
+            )a
+      )b
+SQL;
+        $result = $this->executeQuery($query, $this->params);
+        return $result;
+    }
+
+    public function getDisposedAndClosed()
+    {
+        $query =<<<SQL
+select count(*) as [disposed and closed] from Bill190 where disposition_id not in (1,2,10,5) and disposer != 0 {$this->addDueDateCondition} 
+SQL;
+        $result = $this->executeQuery($query, $this->params);
+        return $result;
+    }
+
+    public function getDisposedAndOpen()
+    {
+        $query = <<<SQL
+        select count(*) as [disposed and still open] from Bill190 where disposition_id in (1,2,10,5) and disposer != 0 {$this->addDueDateCondition}
+SQL;
+        $result = $this->executeQuery($query, $this->params);
+        return $result;
+    }
+
+
+    public function getTotalDisposed()
+    {
+        $query = <<<SQL
+        select count(*) as [total disposed] from Bill190 where disposer != 0  {$this->addDueDateCondition}
+SQL;
+        $result = $this->executeQuery($query, $this->params);
+        return $result;
+    }
+
+    public function getTotalUnDisposed()
+    {
+        $query = <<<SQL
+        select count(*) as [total unDisposed] from Bill190 where disposer = 0 and status != 1  {$this->addDueDateCondition}
+SQL;
+        $result = $this->executeQuery($query, $this->params);
+        return $result;
     }
 
 }

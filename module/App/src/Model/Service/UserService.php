@@ -13,10 +13,13 @@ use Zend\Db;
 use Zend\Authentication\AuthenticationService;
 use Zend\Db\Adapter\Adapter as DbAdapter;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
+use Zend\Session\Service\SessionConfigFactory;
+use Zend\Session\SessionManager;
 use Zend\Session\Storage\SessionStorage;
 
 class UserService
 {
+    /** @var AuthenticationService */
     private $_auth;
 
 
@@ -103,7 +106,9 @@ class UserService
     public function getAuth()
     {
         if (!$this->_auth) {
-            $this->_auth = new AuthenticationService(new Session('Kemper_Auth'));
+            $sessionConfig = new SessionConfigFactory();
+            $sessionManager = new SessionManager();
+            $this->_auth = new AuthenticationService(new Session('Kemper_Auth', 'session_auth', $sessionManager));
         }
         return $this->_auth;
     }

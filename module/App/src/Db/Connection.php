@@ -18,14 +18,15 @@ class Connection
      */
     public function __construct()
     {
-        //Todo: Read config using Config Reader
-        $this->db = new DbAdapter(array(
+        $config = array(
             'driver' => 'sqlsrv',
             'hostname' => 'localhost\SQLEXPRESS',
             'username' => 'sa',
             'password' => 'tiger',
             'database' => 'kemperadmin',
-        ));
+        );
+        //Todo: Read config using Config Reader
+        $this->db = new DbAdapter($config);
     }
 
     /**
@@ -46,14 +47,30 @@ class Connection
     public function executeQuery($sql, $params)
     {
         $result = null;
-        $stmt = $this->createStatement($sql, $params);
-        /** @var  $preparedStmt */
-        $stmt->prepare($sql);
-        if ($stmt->isPrepared()) {
-            /** @var ResultInterface $result */
-            $result = $stmt->execute($params);
+        try {
+            $stmt = $this->createStatement($sql, $params);
+            /** @var  $preparedStmt */
+            $stmt->prepare($sql);
+            if ($stmt->isPrepared()) {
+                /** @var ResultInterface $result */
+                $result = $stmt->execute($params);
+            }
+            return $result;
+        } catch (\Exception $e) {
+            error_log($e->getMessage() . '
+            ' . $e->getTraceAsString());
+            if (($errors = sqlsrv_errors()) != null) {
+                $debugMessage = $sql . "\r\n";
+                foreach ($errors as $error) {
+                    $debugMessage .= "SQLSTATE: " . $error['SQLSTATE'] . "\r\n";
+                    $debugMessage .= "code: " . $error['code'] . "\r\n";
+                    $debugMessage .= "message: " . $error['message'] . "\r\n";
+                }
+                if ($GLOBALS['print_debug_message']) {
+                    error_log($debugMessage);
+                }
+            }
         }
-        return $result;
     }
 
     /**
@@ -62,6 +79,23 @@ class Connection
     public function getDb()
     {
         return $this->db;
+    }
+
+    function createConnection()
+    {
+        $serverName = "rniokc81943\sqlexpress"; //serverName\instanceName
+// Since UID and PWD are not specified in the $connectionInfo array,
+// The connection will be attempted using Windows Authentication.
+        $connectionInfo = array("Database" => "Data_Analytics");
+        $conn = sqlsrv_connect($serverName, $connectionInfo);
+
+        if ($conn) {
+//        echo "Connection established.\r\n";
+        } else {
+            echo "Connection could not be established.<br />";
+            die(print_r(sqlsrv_errors(), true));
+        }
+        return $conn;
     }
 
 

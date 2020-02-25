@@ -6,6 +6,7 @@
 
 namespace App;
 use App\Auth\Identity;
+use App\Di\Injector;
 use App\Di\InjectorFactory;
 use App\Model\Service\UserService;
 use mysql_xdevapi\Exception;
@@ -31,7 +32,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     protected $authService;
 
     /**
-     * @var InjectorFactory
+     * @var Injector
      */
     protected $di;
 
@@ -52,7 +53,8 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
         $userService = new UserService();
         $this->authService = $userService->getAuth();
         if (!$this->authService->hasIdentity()) {
-            throw new \Exception("Invalid Session. Please login again.");
+            return $this->redirect()->toRoute('kemperadmin:login');
+//            throw new \Exception("Invalid Session. Please login again.");
         }
         $this->identity = $this->authService->getIdentity();
         $this->setDi();
@@ -67,7 +69,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     }
 
     /**
-     * @return InjectorFactory
+     * @return Injector
      */
     public function getDi()
     {
@@ -75,7 +77,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     }
 
     /**
-     * @param InjectorFactory $di
+     * @param Injector $di
      * @return AbstractAppController
      */
     public function setDi($di = null)
@@ -85,7 +87,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
                 $this->di = $di;
                 return $this;
             }
-            $this->di = new InjectorFactory();
+            $this->di = new Injector();
         }
         return $this;
     }

@@ -33,7 +33,7 @@ class AbstractRepository implements InjectableInterface
      */
     public function executeQuery($sql, $params = [])
     {
-        return $this->connection->executeQuery($sql, $params);
+        $result =  $this->connection->executeQuery($sql, $params);
     }
 
     /**

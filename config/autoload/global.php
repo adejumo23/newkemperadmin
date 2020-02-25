@@ -12,5 +12,5 @@
  */
 
 return [
-    // ...
+    'print_debug_message' => true,
 ];
