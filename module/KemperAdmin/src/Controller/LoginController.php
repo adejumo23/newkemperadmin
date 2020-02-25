@@ -38,7 +38,8 @@ class LoginController extends AbstractActionController
         if ($result) {
             return new ViewModel($result);
         }
-        $this->redirect()->toRoute('kemperadmin:conservation', []);
+//        $this->redirect()->toRoute('kemperadmin:conservation', []);
+        $this->redirect()->toRoute('kemperadmin:api', []);
     }
 
 }

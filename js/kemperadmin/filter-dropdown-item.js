@@ -202,7 +202,7 @@ function renderChart($element, data, disposeData, labels) {
     });
 }
 function showChartData(response) {
-    if(response.status === 'Data') {
+    if(response.status) {
         var ctx = document.getElementById("earningVsDisposition");
         renderChart(ctx, response.chartData,response.chartDisposed, response.chartLabels);
     }
@@ -236,22 +236,22 @@ function checkFilter(){
         });
     }
 }
-function filterDisposerData(){
-    $('#earningVsDisposition').remove(); // this is my <canvas> element
-    $('.chart-area').append('<canvas id="earningVsDisposition"><canvas>');
-    var disposerId = $(this).data('chart-disposer');
-    var url = "grabDisposerFilterData.php";
-    var data ={'disposerId' :disposerId};
-    $.post(url, data,function(response) {
-        response = JSON.parse(response);
-        if (response.status === '') {
-            alert('Your Customer Service Rep Conserved no premiums so far');
-        }
-        else{
-            showChartData(response);
-        }
-    });
-}
+// function filterDisposerData(){
+//     $('#earningVsDisposition').remove(); // this is my <canvas> element
+//     $('.chart-area').append('<canvas id="earningVsDisposition"><canvas>');
+//     var disposerId = $(this).data('chart-disposer');
+//     var url = "grabDisposerFilterData.php";
+//     var data ={'disposerId' :disposerId};
+//     $.post(url, data,function(response) {
+//         response = JSON.parse(response);
+//         if (response.status === '') {
+//             alert('Your Customer Service Rep Conserved no premiums so far');
+//         }
+//         else{
+//             showChartData(response);
+//         }
+//     });
+// }
 function renderDispositionChart(data,labels) {
     new Chart(document.getElementById("popularDisposition"), {
         type: 'horizontalBar',

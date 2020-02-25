@@ -20,10 +20,10 @@ class Connection
     {
         $config = array(
             'driver' => 'sqlsrv',
-            'hostname' => 'localhost\SQLEXPRESS',
-            'username' => 'sa',
-            'password' => 'tiger',
-            'database' => 'kemperadmin',
+            'hostname' => 'rniokc81943\SQLEXPRESS',
+            'username' => '',
+            'password' => '',
+            'database' => 'data_analytics',
         );
         //Todo: Read config using Config Reader
         $this->db = new DbAdapter($config);

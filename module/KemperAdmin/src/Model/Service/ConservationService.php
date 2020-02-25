@@ -9,6 +9,7 @@ namespace KemperAdmin\Model\Service;
 
 use App\Di\InjectableInterface;
 use KemperAdmin\Model\Repository\ConservationRepository;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class ConservationService implements InjectableInterface
 {
@@ -35,21 +36,9 @@ class ConservationService implements InjectableInterface
 
     public function getConservationData($startDate, $endDate)
     {
-
-        return [
-            'conservedPaidPremium' => 123,
-            'conservedPremium' => 23,
-            'disposedClosed' => false,
-            'disposedOpen' => true,
-            'totalDisposed' => 12,
-            'totalUnDisposed' => 35,
-            'disposedClosedPercent' => 20,
-            'disposedOpenPercent' => 0,
-        ];
-
         $this->init($startDate, $endDate);
-        $conservedPaidPremium = number_format($this->getConservedPaidPremium());
-        $conservedPremium = number_format($this->getConservedPremium());
+        $conservedPaidPremium = $this->getConservedPaidPremium();
+        $conservedPremium = $this->getConservedPremium();
         $disposedClosed = $this->getDisposedAndClosed();
         $disposedOpen = $this->getDisposedAndOpen();
         $totalDisposed = $this->getTotalDisposed();
@@ -103,7 +92,6 @@ class ConservationService implements InjectableInterface
     {
         return $this->conservedPaidPremium;
     }
-
     /**
      */
     public function initConservedPaidPremium()
@@ -111,9 +99,8 @@ class ConservationService implements InjectableInterface
         $result = $this->conservationRepo->getConservedPaidPremium();
         //Todo: Fetch the data from the result correctly
         //Do any modifications to data / decorate the data and return to controller
-        $this->setConservedPaidPremium($result[0]['premium']);
+        $this->setConservedPaidPremium($result);
     }
-
     /**
      * @param mixed $conservedPaidPremium
      * @return ConservationService
@@ -123,9 +110,15 @@ class ConservationService implements InjectableInterface
         $this->conservedPaidPremium = $conservedPaidPremium;
         return $this;
     }
-
-
-
+    /**
+     * @param mixed $conservedPremium
+     * @return ConservationService
+     */
+    public function setConservedPremium($conservedPremium)
+    {
+        $this->conservedPremium = $conservedPremium;
+        return $this;
+    }
     /**
      * @return mixed
      */
@@ -135,14 +128,12 @@ class ConservationService implements InjectableInterface
     }
 
     /**
-     * @param mixed $filter
      */
     public function initConservedPremium()
     {
         $result = $this->conservationRepo->getConservedPremium();
-        $total = $this->conservedPaidPremium + $result[0]['premium'];
-        $this->conservedPremium = $total;
-
+        $conservedPremium = $this->conservedPaidPremium + $result;
+        $this->setConservedPremium($conservedPremium);
     }
 
     /**
@@ -158,8 +149,7 @@ class ConservationService implements InjectableInterface
      */
     public function initDisposedAndOpen()
     {
-        $result = $this->conservationRepo->getDisposedAndOpen();
-        $this->disposedAndOpen = $result[0]['disposed and still open'];
+        $this->disposedAndOpen = $this->conservationRepo->getDisposedAndOpen();
     }
 
     /**
@@ -171,12 +161,11 @@ class ConservationService implements InjectableInterface
     }
 
     /**
-     * @param mixed $filter
+     * @param $result
      */
     public function initDisposedAndClosed()
     {
-        $result = $this->conservationRepo->getDisposedAndClosed();
-        $this->disposedAndClosed = $result[0]['disposed and closed'];
+        $this->disposedAndClosed = $this->conservationRepo->getDisposedAndClosed();
     }
 
 
@@ -188,8 +177,7 @@ class ConservationService implements InjectableInterface
 
     public function initTotalDisposed()
     {
-        $result = $this->conservationRepo->getTotalDisposed();
-        $this->totalDisposed = $result[0]['total disposed'];
+        $this->totalDisposed = $this->conservationRepo->getTotalDisposed();
     }
 
     /**
@@ -204,8 +192,7 @@ class ConservationService implements InjectableInterface
      */
     public function initTotalUnDisposed()
     {
-        $result = $this->conservationRepo->getTotalUnDisposed();
-        $this->totalUnDisposed = $result[0]['total unDisposed'];
+        $this->totalUnDisposed = $this->conservationRepo->getTotalUnDisposed();
     }
 
     /**
@@ -213,16 +200,6 @@ class ConservationService implements InjectableInterface
      */
     public function getDisposerData()
     {
-        return [
-            [
-                'disposer_id' => '123',
-                'disposer_description' => 'blah',
-            ],
-            [
-                'disposer_id' => '124',
-                'disposer_description' => 'blah2',
-            ],
-        ];
         return $this->disposerService->getDisposers();
     }
 
@@ -252,5 +229,4 @@ class ConservationService implements InjectableInterface
         $this->disposerService = $disposerService;
         return $this;
     }
-
 }

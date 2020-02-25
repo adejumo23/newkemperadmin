@@ -23,7 +23,7 @@ return [
         'Zend\Filter',
         'Zend\I18n',
         'Zend\Cache',
-        'ZendDeveloperTools',
+//        'ZendDeveloperTools',
     ],
     // Configuration overrides during development mode
     'module_listener_options' => [

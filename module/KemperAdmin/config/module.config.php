@@ -59,6 +59,17 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:conservation:disposer' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/conservation/disposerData/:disposerId',
+                    'defaults' => [
+                        'controller' => Controller\ConservationController::class,
+                        'action'     => 'disposerData',
+                        'disposerId' => 1,
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [

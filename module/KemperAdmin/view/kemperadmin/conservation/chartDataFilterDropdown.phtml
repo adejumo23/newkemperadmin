@@ -4,12 +4,14 @@
  */
 /**
  * @var array $disposerArray
+ * @var string $disposerDataUrl
  *
  */
 
 foreach ($disposerArray as $data => $information):
     ?>
     <a class="dropdown-item chartDisposerItem" href="#"
+       data-url="<?=$information['disposerDataUrl']?>"
        data-chart-disposer="<?= $information['disposer_id'] ?>"><?= $information['disposer_description'] ?></a>
 <?php
 endforeach;
@@ -17,3 +19,5 @@ endforeach;
 ?>
 <script src="../../js/kemperadmin/conservation-dashboard.js"></script>
 <script src="../../js/kemperadmin/filter-dropdown-item.js"></script>
+
+<input type="hidden" name="disposerDataUrl" value="<?=$disposerDataUrl?>">

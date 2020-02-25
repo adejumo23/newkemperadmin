@@ -43,6 +43,7 @@ class ConservationRepository extends AbstractRepository
 
     public function getConservedPaidPremium()
     {
+        return 123456;
         $query = "select sum(b.ytd_premium) as premium from  (
                     select  distinct * from 
                     (
@@ -63,7 +64,8 @@ class ConservationRepository extends AbstractRepository
                         ytd_mode 
                     ) b ";
 
-        return $this->executeQuery($query, $this->params);
+        $result = $this->executeQuery($query, $this->params);
+        return $result[0]['premium'];
     }
 
 
@@ -88,44 +90,44 @@ select sum(premium) as premium from (
       )b
 SQL;
         $result = $this->executeQuery($query, $this->params);
-        return $result;
+        return $result[0]['premium'];
     }
 
     public function getDisposedAndClosed()
     {
         $query =<<<SQL
-select count(*) as [disposed and closed] from Bill190 where disposition_id not in (1,2,10,5) and disposer != 0 {$this->addDueDateCondition} 
+select count(*) as [disposed_and_closed] from Bill190 where disposition_id not in (1,2,10,5) and disposer != 0 {$this->addDueDateCondition} 
 SQL;
         $result = $this->executeQuery($query, $this->params);
-        return $result;
+        return $result[0]['disposed_and_closed'];
     }
 
     public function getDisposedAndOpen()
     {
         $query = <<<SQL
-        select count(*) as [disposed and still open] from Bill190 where disposition_id in (1,2,10,5) and disposer != 0 {$this->addDueDateCondition}
+        select count(*) as [disposed_and_still_open] from Bill190 where disposition_id in (1,2,10,5) and disposer != 0 {$this->addDueDateCondition}
 SQL;
         $result = $this->executeQuery($query, $this->params);
-        return $result;
+        return $result[0]['disposed_and_still_open'];
     }
 
 
     public function getTotalDisposed()
     {
         $query = <<<SQL
-        select count(*) as [total disposed] from Bill190 where disposer != 0  {$this->addDueDateCondition}
+        select count(*) as [total_disposed] from Bill190 where disposer != 0  {$this->addDueDateCondition}
 SQL;
         $result = $this->executeQuery($query, $this->params);
-        return $result;
+        return $result[0]['total_disposed'];
     }
 
     public function getTotalUnDisposed()
     {
         $query = <<<SQL
-        select count(*) as [total unDisposed] from Bill190 where disposer = 0 and status != 1  {$this->addDueDateCondition}
+        select count(*) as [total_undisposed] from Bill190 where disposer = 0 and status != 1  {$this->addDueDateCondition}
 SQL;
         $result = $this->executeQuery($query, $this->params);
-        return $result;
+        return $result[0]['total_undisposed'];
     }
 
 }

@@ -29,13 +29,13 @@ class UserService
      */
     public function authenticateUser($username, $password)
     {
-        $dbAdapter = new DbAdapter(array(
+        $dbAdapter = new DbAdapter([
             'driver' => 'sqlsrv',
-            'hostname' => 'localhost\SQLEXPRESS',
-            'username' => 'sa',
-            'password' => 'tiger',
-            'database' => 'kemperadmin',
-        ));
+            'hostname' => 'RNIOKC81943\sqlexpress',
+            'username' => '',
+            'password' => '',
+            'database' => 'data_analytics',
+        ]);
 
         $authAdapter = new AuthAdapter($dbAdapter,
             'users',

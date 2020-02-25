@@ -11,6 +11,7 @@ use KemperAdmin\Model\Repository\DisposerRepository;
 
 class DisposerService
 {
+    const CHART_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     /**
      * @var DisposerRepository
      * @Inject(name="KemperAdmin\Model\Repository\DisposerRepository")
@@ -41,6 +42,31 @@ class DisposerService
     {
         $this->disposersRepo = $disposersRepo;
         return $this;
+    }
+
+    /**
+     * @param int $disposerId
+     * @return array
+     */
+    public function getDisposerDataById($disposerId = 1)
+    {
+        $resultPremium = $this->disposersRepo->getDisposerPremiumByDisposer($disposerId);
+        $resultDispositions = $this->disposersRepo->getTotalDispositionsByDisposer($disposerId);
+        $result = [];
+        if ($resultPremium){
+            $ids = array_column($resultPremium, 'premium');
+            $outputPremium = implode(',', $ids);
+            $outputPremium = explode(',',$outputPremium);
+            $ids = array_column($resultDispositions, 'total dispositions');
+            $outputDisposed = implode(',', $ids);
+            $outputDisposed = explode(',',$outputDisposed);
+            $result =[
+                'chartData' => $outputPremium,
+                'chartDisposed' => $outputDisposed,
+                'chartLabels' => self::CHART_LABELS
+            ];
+        }
+        return $result;
     }
 
 

@@ -1,12 +1,15 @@
 function filterDisposerData() {
     $('#earningVsDisposition').remove(); // this is my <canvas> element
     $('.chart-area').append('<canvas id="earningVsDisposition"><canvas>');
-    var disposerId = $(this).data('chart-disposer');
-    var url = "grabDisposerFilterData.php";
-    var data = {'disposerId': disposerId};
+    var url = $(this).data('url');
+    if (url == undefined) {
+        url = $('[name="disposerDataUrl"]').val();
+    }
+    var data = {};
+
     $.post(url, data, function (response) {
         response = JSON.parse(response);
-        if (response.status === '') {
+        if (!response.status) {
             alert('Your Customer Service Rep Conserved no premiums so far');
         } else {
             showChartData(response);
@@ -19,7 +22,7 @@ function dispositionChart() {
     var data = {'activeDispositions': dummyData};
     $.get(url, data, function (response) {
         response = JSON.parse(response);
-        if (response.status === 'data') {
+        if (response.status) {
             renderDispositionChart(response.dataset, response.labels)
         }
     });
