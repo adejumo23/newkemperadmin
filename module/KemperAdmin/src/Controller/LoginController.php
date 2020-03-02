@@ -19,6 +19,13 @@ class LoginController extends AbstractActionController
      * @var RequestInterface
      */
     protected $request;
+
+    /**
+     * @var UserService
+     * @Inject(name="App\Model\Service\UserService")
+     */
+    protected $userService;
+
     /**
      * @return \Zend\View\Model\ViewModel
      */
@@ -32,14 +39,23 @@ class LoginController extends AbstractActionController
         $user = $this->request->getPost('username');
         $pass = $this->request->getPost('password');
 
-        $userService = new UserService();
-        $result = $userService->authenticateUser($user, $pass);
+        $result = $this->userService->authenticateUser($user, $pass);
 
         if ($result) {
             return new ViewModel($result);
         }
-//        $this->redirect()->toRoute('kemperadmin:conservation', []);
-        $this->redirect()->toRoute('kemperadmin:api', []);
+        $this->redirect()->toRoute('kemperadmin:conservation', []);
+//        $this->redirect()->toRoute('kemperadmin:api', []);
+    }
+
+    /**
+     * @param UserService $userService
+     * @return LoginController
+     */
+    public function setUserService($userService)
+    {
+        $this->userService = $userService;
+        return $this;
     }
 
 }

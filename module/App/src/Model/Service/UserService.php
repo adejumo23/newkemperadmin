@@ -6,6 +6,8 @@
 namespace App\Model\Service;
 use App\Auth\Identity;
 use App\Auth\Storage;
+use App\Db\Connection;
+use App\Di\InjectableInterface;
 use Zend\Authentication\Result;
 use Zend\Authentication\Storage\Session;
 use Zend\Db\Adapter\Adapter;
@@ -17,11 +19,16 @@ use Zend\Session\Service\SessionConfigFactory;
 use Zend\Session\SessionManager;
 use Zend\Session\Storage\SessionStorage;
 
-class UserService
+class UserService implements InjectableInterface
 {
     /** @var AuthenticationService */
     private $_auth;
 
+    /**
+     * @var Connection
+     * @Inject(name="App\Db\Connection")
+     */
+    protected $connection;
 
     /**
      * @param $username
@@ -29,15 +36,7 @@ class UserService
      */
     public function authenticateUser($username, $password)
     {
-        $dbAdapter = new DbAdapter([
-            'driver' => 'sqlsrv',
-            'hostname' => 'RNIOKC81943\sqlexpress',
-            'username' => '',
-            'password' => '',
-            'database' => 'data_analytics',
-        ]);
-
-        $authAdapter = new AuthAdapter($dbAdapter,
+        $authAdapter = new AuthAdapter($this->connection->getDb(),
             'users',
             'username',
             'password'
@@ -111,6 +110,16 @@ class UserService
             $this->_auth = new AuthenticationService(new Session('Kemper_Auth', 'session_auth', $sessionManager));
         }
         return $this->_auth;
+    }
+
+    /**
+     * @param Connection $connection
+     * @return UserService
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+        return $this;
     }
 
 

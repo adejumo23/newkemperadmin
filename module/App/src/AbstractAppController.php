@@ -5,11 +5,13 @@
  */
 
 namespace App;
+
 use App\Auth\Identity;
 use App\Di\Injector;
 use App\Di\InjectorFactory;
+use App\Di\ServiceManager;
 use App\Model\Service\UserService;
-use mysql_xdevapi\Exception;
+use Interop\Container\ContainerInterface;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
@@ -32,9 +34,30 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     protected $authService;
 
     /**
-     * @var Injector
+     * @var ContainerInterface
      */
-    protected $di;
+    protected $container;
+
+    /**
+     * @var MvcEvent
+     */
+    protected $event;
+
+    /**
+     * @var UserService
+     * @Inject(name="App\Model\Service\UserService")
+     */
+    protected $userService;
+
+    /**
+     * @param UserService $userService
+     * @return AbstractAppController
+     */
+    public function setUserService($userService)
+    {
+        $this->userService = $userService;
+        return $this;
+    }
 
     /**
      * Register the default events for this controller
@@ -45,19 +68,25 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     {
         parent::attachDefaultListeners();
         $events = $this->getEventManager();
-        $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'authenticate'], 999);
+        $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'initialize'], 999);
+        $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'authenticate'], 995);
+    }
+
+    public function initialize()
+    {
+        $serviceManager = $this->event->getApplication()->getServiceManager();
+        $this->container = new ServiceManager();
+        $this->container->setContainer($serviceManager);
     }
 
     public function authenticate()
     {
-        $userService = new UserService();
-        $this->authService = $userService->getAuth();
+        $this->authService = $this->userService->getAuth();
         if (!$this->authService->hasIdentity()) {
             return $this->redirect()->toRoute('kemperadmin:login');
 //            throw new \Exception("Invalid Session. Please login again.");
         }
         $this->identity = $this->authService->getIdentity();
-        $this->setDi();
     }
 
     protected function getIdentity()
@@ -69,26 +98,20 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     }
 
     /**
-     * @return Injector
+     * @return ContainerInterface
      */
-    public function getDi()
+    public function getContainer()
     {
-        return $this->di;
+        return $this->container;
     }
 
     /**
-     * @param Injector $di
+     * @param ContainerInterface $container
      * @return AbstractAppController
      */
-    public function setDi($di = null)
+    public function setContainer($container = null)
     {
-        if (!$this->di) {
-            if ($di) {
-                $this->di = $di;
-                return $this;
-            }
-            $this->di = new Injector();
-        }
+        $this->container = $container;
         return $this;
     }
 

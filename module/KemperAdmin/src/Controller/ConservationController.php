@@ -18,6 +18,12 @@ class ConservationController extends AbstractAppController
 {
 
     /**
+     * @var ConservationService
+     * @Inject(name="KemperAdmin\Model\Service\ConservationService")
+     */
+    protected $conservationService;
+
+    /**
      * @return ViewModel
      * @throws Exception
      */
@@ -27,12 +33,10 @@ class ConservationController extends AbstractAppController
         $startDate = $this->request->getQuery('startdate');
         $endDate = $this->request->getQuery('enddate');
 
-        /** @var ConservationService $conservationService */
-        $conservationService = $this->getDi()->getInstance('KemperAdmin\Model\Service\ConservationService');
-        $data = $conservationService->getConservationData($startDate, $endDate);
+        $data = $this->conservationService->getConservationData($startDate, $endDate);
 
-        $disposerArray = $conservationService->getDisposerData();
-        foreach ($disposerArray as $key => $value) {
+        $disposerArray = $this->conservationService->getDisposerData();
+        foreach ((array)$disposerArray as $key => $value) {
             $disposerArray[$key]['disposerDataUrl'] = $this->url()->fromRoute('kemperadmin:conservation:disposer', [
                 'disposerId' => $value['disposer_id'],
             ]);
@@ -59,11 +63,22 @@ class ConservationController extends AbstractAppController
     {
         $disposerId = $this->params()->fromRoute('disposerId');
         /** @var DisposerService $disposerService */
-        $disposerService = $this->getDi()->getInstance('KemperAdmin\Model\Service\DisposerService');
+        $disposerService = $this->getContainer()->getInstance('KemperAdmin\Model\Service\DisposerService');
         $data = $disposerService->getDisposerDataById($disposerId);
         $data['status'] = count($data) > 0;
         echo json_encode($data);
         exit();
     }
+
+    /**
+     * @param ConservationService $conservationService
+     * @return ConservationController
+     */
+    public function setConservationService($conservationService)
+    {
+        $this->conservationService = $conservationService;
+        return $this;
+    }
+
 
 }

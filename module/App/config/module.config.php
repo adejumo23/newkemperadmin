@@ -7,8 +7,12 @@
 
 namespace App;
 
-use App\Di\Injector;
+use App\Db\Connection;
+use App\Di\AbstractFactory;
+use App\Di\ControllerManagerFactory;
 use App\Di\InjectorFactory;
+use App\Db\ConnectionFactory;
+use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 
 return [
     'service_manager' => [
@@ -16,11 +20,18 @@ return [
             'Zend\Session\Config\ConfigInterface' => 'Zend\Session\Service\SessionConfigFactory',
             'Zend\Session\Storage\StorageInterface' => 'Zend\Session\Service\SessionStorageFactory',
             'Zend\Session\ManagerInterface' => 'Zend\Session\Service\SessionManagerFactory',
-//            Injector::class => InjectorFactory::class,
+            'App\Db\Connection' => 'App\Db\ConnectionFactory',
+            'injector' => InjectorFactory::class,
+            'ControllerManager' => ControllerManagerFactory::class,
+            Connection::class => ConnectionFactory::class,
         ],
         'abstract_factories' => [
-//            'Zend\Session\Service\ContainerAbstractFactory',
-//            InjectorFactory::class,
+            AbstractFactory::class,
+        ],
+    ],
+    'dependencies' => [
+        'abstract_factories' => [
+            ConfigAbstractFactory::class,
         ],
     ],
     'session_config' => [

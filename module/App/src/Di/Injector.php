@@ -7,7 +7,6 @@
 namespace App\Di;
 
 
-
 use Interop\Container\ContainerInterface;
 
 class Injector
@@ -33,42 +32,50 @@ class Injector
      */
     public function getInstance($className)
     {
-
-//        $serviceManager = new ServiceManager($config);
         if (class_exists($className)) {
-            $classObject = new $className;
-            $reflectionClass = new \ReflectionClass($className);
-            $classProperties = $reflectionClass->getProperties();
-            foreach ($classProperties as $property) {
-                $propertyComment = $property->getDocComment();
-                if (strpos($propertyComment, '@Inject')) {
-                    $annotationArr = explode("\"", $propertyComment);
-                    $injectionClass = $annotationArr[1];
-                    if (class_exists($injectionClass)) {
-                        $injectionClassInstance = $this->getInstance($injectionClass);
-                        $propertyName = $property->getName();
-                        $setterMethod = 'set' . $propertyName;
-                        if (method_exists($classObject, $setterMethod)) {
-                            $classObject->{$setterMethod}($injectionClassInstance);
-                            continue;
-                        }else{
-                            throw  new \Exception('Setter missing for class property injection: ' . $className . ':' . $setterMethod);
-                        }
-                    }
-                    throw  new \Exception('Class not found for property injection: ' . $className);
-                }
-            }
-            $this->init($classObject);
-            return $classObject;
+            $classObject = $this->container->get($className);
+            return $this->injectAnnotations($classObject);
         }
         throw  new \Exception('Class not found for injection: ' . $className);
     }
 
     private function init(&$classObject)
     {
-        if ($classObject instanceof InjectableInterface) {
-            $classObject->setDi($this);
+        if ($classObject instanceof InitializableInterface) {
+            $classObject->init();
         }
     }
 
+    /**
+     * @param $classObject
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function injectAnnotations(&$classObject)
+    {
+        $className = get_class($classObject);
+        $reflectionClass = new \ReflectionClass($className);
+        $classProperties = $reflectionClass->getProperties();
+        foreach ($classProperties as $property) {
+            $propertyComment = $property->getDocComment();
+            if (strpos($propertyComment, '@Inject')) {
+                $annotationArr = explode("\"", $propertyComment);
+                $injectionClass = $annotationArr[1];
+                if (class_exists($injectionClass)) {
+                    $injectionClassInstance = $this->getInstance($injectionClass);
+                    $propertyName = $property->getName();
+                    $setterMethod = 'set' . $propertyName;
+                    if (method_exists($classObject, $setterMethod)) {
+                        $classObject->{$setterMethod}($injectionClassInstance);
+                        continue;
+                    } else {
+                        throw  new \Exception('Setter missing for class property injection: ' . $className . ':' . $setterMethod);
+                    }
+                }
+                throw  new \Exception('Class not found for property injection: ' . $className);
+            }
+        }
+        $this->init($classObject);
+        return $classObject;
+    }
 }

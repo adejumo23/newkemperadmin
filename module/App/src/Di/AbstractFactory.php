@@ -1,21 +1,12 @@
 <?php
-/**
- * Date: 1/30/2020
- * Time: 10:40 PM
- */
 
 namespace App\Di;
 
-
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
-class InjectorFactory implements FactoryInterface
+class AbstractFactory implements AbstractFactoryInterface
 {
-    protected $serviceManager;
-    protected $request;
-    protected $response;
-
 
     /**
      * Create an object
@@ -28,7 +19,7 @@ class InjectorFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new Injector($container);
+        return new $requestedName();
     }
 
     /**
@@ -41,9 +32,11 @@ class InjectorFactory implements FactoryInterface
      */
     public function canCreate(ContainerInterface $container, $requestedName)
     {
-        $reflectionClass = new \ReflectionClass($requestedName);
-        if ($reflectionClass->implementsInterface(InjectableInterface::class)) {
-            return true;
+        if (class_exists($requestedName)) {
+            $reflectionClass = new \ReflectionClass($requestedName);
+            if ($reflectionClass->implementsInterface(InjectableInterface::class)) {
+                return true;
+            }
         }
         return false;
     }

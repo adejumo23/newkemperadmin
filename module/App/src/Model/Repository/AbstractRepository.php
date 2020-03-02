@@ -15,8 +15,6 @@ use Zend\Db\ResultSet\ResultSet;
 class AbstractRepository implements InjectableInterface
 {
 
-    protected $di;
-
     /**
      * @var Connection
      * @Inject(name="App\Db\Connection")
@@ -53,12 +51,5 @@ class AbstractRepository implements InjectableInterface
     {
         $this->connection = $connection;
         return $this;
-    }
-
-
-
-    public function setDi($di)
-    {
-        $this->di = $di;
     }
 }

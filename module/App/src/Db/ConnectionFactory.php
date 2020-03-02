@@ -1,29 +1,14 @@
 <?php
 
+namespace App\Db;
+
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\Session\Config\ConfigInterface;
-use Zend\Session\Config\SessionConfig;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
+use Zend\Db\Adapter\Adapter as DbAdapter;
 
-class ConnectionFactory implements FactoryInterface
+class ConnectionFactory implements AbstractFactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     * @param null $canonicalName
-     * @param string $requestedName
-     * @return mixed
-     * @throws \Interop\Container\Exception\ContainerException
-     */
-    public function createService(ServiceLocatorInterface $services,
-                                  $canonicalName = null,
-                                  $requestedName = ConfigInterface::class)
-    {
-        return $this($services, $requestedName);
-    }
 
     /**
      * Create an object
@@ -45,10 +30,27 @@ class ConnectionFactory implements FactoryInterface
                 'Configuration is missing a "kemperdb" key, or the value of that key is not an array'
             );
         }
+        $dbConfig = $config['kemperdb'];
 
-        $class  = SessionConfig::class;
-        $config = $config['session_config'];
+        //Todo: Read config using Config Reader
+        return new \App\Db\Connection(new DbAdapter($dbConfig));
 
+    }
 
+    /**
+     * Can the factory create an instance for the service?
+     *
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @return bool
+     */
+    public function canCreate(ContainerInterface $container, $requestedName)
+    {
+        if (! $container->has('config') || ! array_key_exists(self::class, $container->get('config'))) {
+            return false;
+        }
+        $config = $container->get('config');
+        $dependencies = $config['kemperdb'];
+        return is_array($dependencies);
     }
 }

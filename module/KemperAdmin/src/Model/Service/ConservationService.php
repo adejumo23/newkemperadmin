@@ -21,7 +21,6 @@ class ConservationService implements InjectableInterface
     private $disposedAndClosed;
     private $totalDisposed;
     private $totalUnDisposed;
-    protected $di;
     /**
      * @var ConservationRepository
      * @Inject(name="KemperAdmin\Model\Repository\ConservationRepository")
@@ -201,12 +200,6 @@ class ConservationService implements InjectableInterface
     public function getDisposerData()
     {
         return $this->disposerService->getDisposers();
-    }
-
-    public function setDi($di)
-    {
-        $this->di = $di;
-        return $this;
     }
 
     /**

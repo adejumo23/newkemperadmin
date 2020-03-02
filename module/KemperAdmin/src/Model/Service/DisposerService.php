@@ -7,9 +7,10 @@
 namespace KemperAdmin\Model\Service;
 
 
+use App\Di\InjectableInterface;
 use KemperAdmin\Model\Repository\DisposerRepository;
 
-class DisposerService
+class DisposerService implements InjectableInterface
 {
     const CHART_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     /**
@@ -68,6 +69,5 @@ class DisposerService
         }
         return $result;
     }
-
 
 }

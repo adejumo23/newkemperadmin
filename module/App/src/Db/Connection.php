@@ -6,6 +6,7 @@
 
 namespace App\Db;
 use Zend\Db\Adapter\Adapter as DbAdapter;
+use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\Driver\ResultInterface;
 
 
@@ -15,18 +16,11 @@ class Connection
 
     /**
      * Connection constructor.
+     * @param Adapter $db
      */
-    public function __construct()
+    public function __construct(Adapter $db)
     {
-        $config = array(
-            'driver' => 'sqlsrv',
-            'hostname' => 'rniokc81943\SQLEXPRESS',
-            'username' => '',
-            'password' => '',
-            'database' => 'data_analytics',
-        );
-        //Todo: Read config using Config Reader
-        $this->db = new DbAdapter($config);
+        $this->db = $db;
     }
 
     /**
