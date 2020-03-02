@@ -7,12 +7,18 @@
 
 namespace App;
 
+use App\Auth\AuthenticationServiceFactory;
+use App\Auth\Storage;
 use App\Db\Connection;
 use App\Di\AbstractFactory;
 use App\Di\ControllerManagerFactory;
 use App\Di\InjectorFactory;
 use App\Db\ConnectionFactory;
+use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Zend\Session\Config\SessionConfig;
+use Zend\Session\Service\SessionConfigFactory;
+use Zend\Session\Service\StorageFactory;
 
 return [
     'service_manager' => [
@@ -24,9 +30,15 @@ return [
             'injector' => InjectorFactory::class,
             'ControllerManager' => ControllerManagerFactory::class,
             Connection::class => ConnectionFactory::class,
+            AuthenticationService::class => AuthenticationServiceFactory::class,
+            SessionConfig::class => SessionConfigFactory::class,
+            Storage::class => StorageFactory::class,
         ],
         'abstract_factories' => [
             AbstractFactory::class,
+        ],
+        'aliases' => [
+            'auth' => AuthenticationService::class,
         ],
     ],
     'dependencies' => [
@@ -37,9 +49,13 @@ return [
     'session_config' => [
         'remember_me_seconds' => 1800,
         'name' => 'Kemper_Auth',
+        'cookie_httponly' => false,
+        'cookie_lifetime' => 3600,
+        'save_path' => 'c:/devapps/php/php_sessions',
+        'use_cookies' => true,
     ],
     'session_storage' => [
-        'type' => 'SessionArrayStorage',
+        'type' => Storage::class,
         'options' => [], // Likely don't want to seed it
     ],
     'session_containers' => [

@@ -81,7 +81,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
 
     public function authenticate()
     {
-        $this->authService = $this->userService->getAuth();
+        $this->authService = $this->userService->getAuthenticationService();
         if (!$this->authService->hasIdentity()) {
             return $this->redirect()->toRoute('kemperadmin:login');
 //            throw new \Exception("Invalid Session. Please login again.");

@@ -33,7 +33,7 @@ class ConnectionFactory implements AbstractFactoryInterface
         $dbConfig = $config['kemperdb'];
 
         //Todo: Read config using Config Reader
-        return new \App\Db\Connection(new DbAdapter($dbConfig));
+        return new Connection(new DbAdapter($dbConfig));
 
     }
 

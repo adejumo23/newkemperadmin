@@ -44,6 +44,9 @@ class Injector
         if ($classObject instanceof InitializableInterface) {
             $classObject->init();
         }
+        if ($classObject instanceof ContainerAwareInterface) {
+            $classObject->setContainer($this->container);
+        }
     }
 
     /**
@@ -63,16 +66,22 @@ class Injector
                 $injectionClass = $annotationArr[1];
                 if (class_exists($injectionClass)) {
                     $injectionClassInstance = $this->getInstance($injectionClass);
-                    $propertyName = $property->getName();
-                    $setterMethod = 'set' . $propertyName;
-                    if (method_exists($classObject, $setterMethod)) {
-                        $classObject->{$setterMethod}($injectionClassInstance);
-                        continue;
-                    } else {
-                        throw  new \Exception('Setter missing for class property injection: ' . $className . ':' . $setterMethod);
-                    }
                 }
-                throw  new \Exception('Class not found for property injection: ' . $className);
+                elseif ($this->container->has($injectionClass)) {
+                    $injectionClassInstance = $this->container->get($injectionClass);
+                }
+                else {
+                    throw  new \Exception('Class not found for property injection: ' . $className);
+                }
+
+                $propertyName = $property->getName();
+                $setterMethod = 'set' . $propertyName;
+                if (method_exists($classObject, $setterMethod)) {
+                    $classObject->{$setterMethod}($injectionClassInstance);
+                    continue;
+                } else {
+                    throw  new \Exception('Setter missing for class property injection: ' . $className . ':' . $setterMethod);
+                }
             }
         }
         $this->init($classObject);
