@@ -1,6 +1,25 @@
-<?php
 
-?>
+<?php
+/**
+ * @var ViewModel $helper
+ */
+/**
+ * @var float $conservedPremium
+ * @var float $conservedPaidPremium
+ * @var string $disposedOpen
+ * @var string $disposedOpenPercent
+ * @var string $disposedClosed
+ * @var string $disposedClosedPercent
+ * @var string $totalDisposed
+ * @var string $totalUnDisposed
+ * @var string $chartdatafilterdropdown
+ * @var string $filterdropdowndashboard
+ * @var string $firstName
+ * @var string $lastName
+ *
+ */
+
+use Zend\View\Helper\ViewModel; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,33 +39,29 @@
 
     <!-- Custom styles for this template-->
     <link href="../../css/vendor/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+<!--    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">-->
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="../../css/vendor/default.css">
     <link rel="stylesheet" href="../../css/vendor/default.date.css">
     <!--      <link rel="stylesheet" href="css/bootstrap.min.css">-->
-
     <!-- Bootstrap core JavaScript-->
-    <script src="js/vendor/jquery/jquery.min.js"></script>
-    <script src="js/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="../../js/vendor/jquery/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script src="../../js/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="../../js/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <!-- Page level plugins -->
+    <script src="../../js/vendor/chart.js/Chart.min.js"></script>
+    <script src="../../js/vendor/demo/chart-area-demo.js"></script>
+    <script src="../../js/vendor/popper.min.js"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/mdb.min.js"></script>
-    <script type="text/javascript" src="js/picker.js"></script>
-    <script type="text/javascript" src="js/picker.date.js"></script>
-    <script type="text/javascript" src="js/legacy.js"></script>
+    <script src="../../js/vendor//bootstrap.min.js"></script>
+    <script src="../../js/vendor/picker.js"></script>
+    <script src="../../js/vendor/pickerdate.js"></script>
+    <script src="../../js/vendor/legacy.js"></script>
+
 </head>
 
 <body id="body">
@@ -58,7 +73,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="ConservationDashboard.php">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php/conservation">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -70,7 +85,7 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="ConservationDashboard.php">
+            <a class="nav-link" href="index.php/conservation">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
         </li>
@@ -154,7 +169,7 @@
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?=$firstName.' '.$lastName?></span>
                             <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                         </a>
                         <!-- Dropdown - User Information -->
@@ -190,6 +205,7 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                    <?php echo $this->render($filterdropdowndashboard);?>
                 </div>
 
                 <!-- Content Row -->
@@ -202,7 +218,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Conserved Premium</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$<?=$conservedPremium?></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$<?=number_format($conservedPremium)?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -219,7 +235,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Conserved Paid</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$<?=$conservedPaidPremium?></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$<?=number_format($conservedPaidPremium)?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -317,7 +333,7 @@
                 <div class="row">
 
                     <!-- Area Chart -->
-                    <div class="col-xl-8 col-lg-7">
+                    <div class="col-lg-6 mb-4">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -340,7 +356,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 mb-4">
+                    <div class="col-lg-6 mb-4">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -354,7 +370,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-8 col-lg-7">
+                    <div class="col-lg-6 mb-4">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -365,7 +381,7 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">List of Available Years:</div>
-                                        <?php include_once __DIR__."/yearlyPerDisposer.php";?>
+<!--                                        --><?php //include_once __DIR__."/yearlyPerDisposer.php";?>
                                     </div>
                                 </div>
                             </div>
@@ -377,23 +393,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 mb-4">
+                    <div class="col-lg-6 mb-4">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Timeline Filter</h6>
                             </div>
                             <!--                       Card Body -->
-                            <div class="card-body">
-                                <?php include_once __DIR__ . '/filter-dropdown.php'?>
-                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-5">
-                                <?php include_once __DIR__.'/updateDispositionsModal.php';?>
+<!--                                --><?php //include_once __DIR__.'/updateDispositionsModal.php';?>
                             </div>
                             <div class="col-sm-5">
-                                <?php include_once __DIR__.'/addRemoveDispositions.php';?>
+<!--                                --><?php //include_once __DIR__.'/addRemoveDispositions.php';?>
                             </div>
                         </div>
                     </div>
@@ -403,66 +416,18 @@
                 <div class="row">
 
                     <!-- Content Column -->
-                    <div class="col-xl-8 col-lg-7">
+                    <div class="col-lg-6 mb-4">
 
                         <!-- Project Card Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Stats</h6>
                             </div>
-                            <?php include_once  __DIR__.'/disposerStats.php';?>
+                            <!--                            --><?php //include_once  __DIR__.'/disposerStats.php';?>
                         </div>
                         <!-- Color System -->
-                        <div class="row">
-                            <!--                <div class="col-lg-6 mb-4">-->
-                            <!--                  <div class="card bg-primary text-white shadow">-->
-                            <!--                    <div class="card-body">-->
-                            <!--                      Primary-->
-                            <!--                      <div class="text-white-50 small">#4e73df</div>-->
-                            <!--                    </div>-->
-                            <!--                  </div>-->
-                            <!--                </div>-->
-                            <!--                <div class="col-lg-6 mb-4">-->
-                            <!--                  <div class="card bg-success text-white shadow">-->
-                            <!--                    <div class="card-body">-->
-                            <!--                      Success-->
-                            <!--                      <div class="text-white-50 small">#1cc88a</div>-->
-                            <!--                    </div>-->
-                            <!--                  </div>-->
-                            <!--                </div>-->
-                            <!--                <div class="col-lg-6 mb-4">-->
-                            <!--                  <div class="card bg-info text-white shadow">-->
-                            <!--                    <div class="card-body">-->
-                            <!--                      Info-->
-                            <!--                      <div class="text-white-50 small">#36b9cc</div>-->
-                            <!--                    </div>-->
-                            <!--                  </div>-->
-                            <!--                </div>-->
-                            <!--                <div class="col-lg-6 mb-4">-->
-                            <!--                  <div class="card bg-warning text-white shadow">-->
-                            <!--                    <div class="card-body">-->
-                            <!--                      Warning-->
-                            <!--                      <div class="text-white-50 small">#f6c23e</div>-->
-                            <!--                    </div>-->
-                            <!--                  </div>-->
-                            <!--                </div>-->
-                            <!--                <div class="col-lg-6 mb-4">-->
-                            <!--                  <div class="card bg-danger text-white shadow">-->
-                            <!--                    <div class="card-body">-->
-                            <!--                      Danger-->
-                            <!--                      <div class="text-white-50 small">#e74a3b</div>-->
-                            <!--                    </div>-->
-                            <!--                  </div>-->
-                            <!--                </div>-->
-                            <!--                <div class="col-lg-6 mb-4">-->
-                            <!--                  <div class="card bg-secondary text-white shadow">-->
-                            <!--                    <div class="card-body">-->
-                            <!--                      Secondary-->
-                            <!--                      <div class="text-white-50 small">#858796</div>-->
-                            <!--                    </div>-->
-                            <!--                  </div>-->
-                            <!--                </div>-->
-                        </div>
+<!--                        <div class="row">-->
+<!--                        </div>-->
                     </div>
                 </div>
 
@@ -498,13 +463,13 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <a class="btn btn-primary" href="login/logout">Logout</a>
             </div>
         </div>
     </div>
 </div>
 <!--  Bootstrap core CSS-->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="../../js/vendor/sb-admin-2.min.js"></script>
 
 </body>
 

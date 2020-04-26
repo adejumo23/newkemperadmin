@@ -4,8 +4,13 @@
  * Time: 8:52 PM
  */
 namespace App\Model\Service;
+
 use App\Auth\Identity;
 use App\Auth\Storage;
+use App\Db\Connection;
+use App\Di\ContainerAwareInterface;
+use App\Di\InjectableInterface;
+use Interop\Container\ContainerInterface;
 use Zend\Authentication\Result;
 use Zend\Authentication\Storage\Session;
 use Zend\Db\Adapter\Adapter;
@@ -13,12 +18,28 @@ use Zend\Db;
 use Zend\Authentication\AuthenticationService;
 use Zend\Db\Adapter\Adapter as DbAdapter;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
+use Zend\Session\Service\SessionConfigFactory;
+use Zend\Session\SessionManager;
 use Zend\Session\Storage\SessionStorage;
 
-class UserService
+class UserService implements InjectableInterface, ContainerAwareInterface
 {
-    private $_auth;
+    /**
+     * @var AuthenticationService
+     * @Inject(name="auth")
+     */
+    private $authenticationService;
 
+    /**
+     * @var Connection
+     * @Inject(name="App\Db\Connection")
+     */
+    protected $connection;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * @param $username
@@ -26,15 +47,7 @@ class UserService
      */
     public function authenticateUser($username, $password)
     {
-        $dbAdapter = new DbAdapter(array(
-            'driver' => 'sqlsrv',
-            'hostname' => 'localhost\SQLEXPRESS',
-            'username' => 'sa',
-            'password' => 'tiger',
-            'database' => 'kemperadmin',
-        ));
-
-        $authAdapter = new AuthAdapter($dbAdapter,
+        $authAdapter = new AuthAdapter($this->connection->getDb(),
             'users',
             'username',
             'password'
@@ -44,8 +57,8 @@ class UserService
             ->setIdentity($username)
             ->setCredential($password)
         ;
-        $this->getAuth()->getStorage()->clear();
-        $result = $this->getAuth()->authenticate($authAdapter);
+        $this->clearCurrentSession();
+        $result = $this->getAuthenticationService()->authenticate($authAdapter);
         if (!$result->isValid()) {
             switch ($result->getCode()) {
                 case Result::FAILURE_IDENTITY_NOT_FOUND:
@@ -72,7 +85,12 @@ class UserService
         );
         $data = $authAdapter->getResultRowObject(null, $columnsToOmit);
         $identity = $this->createIdentity($data);
-        $storage = $this->_auth->getStorage();
+
+//        $sessionManager = new SessionManager();
+//
+//        $storage = new Session();
+
+        $storage = $this->authenticationService->getStorage();
         $storage->write($identity);
 
         /*
@@ -100,13 +118,39 @@ class UserService
     /**
      * @return AuthenticationService
      */
-    public function getAuth()
+    public function getAuthenticationService()
     {
-        if (!$this->_auth) {
-            $this->_auth = new AuthenticationService(new Session('Kemper_Auth'));
-        }
-        return $this->_auth;
+        return $this->authenticationService;
+    }
+
+    /**
+     * @param Connection $connection
+     * @return UserService
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+        return $this;
+    }
+
+    /**
+     * @param AuthenticationService $auth
+     * @return UserService
+     */
+    public function setAuthenticationService($auth)
+    {
+        $this->authenticationService = $auth;
+        return $this;
     }
 
 
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function clearCurrentSession()
+    {
+        $this->getAuthenticationService()->getStorage()->clear();
+    }
 }

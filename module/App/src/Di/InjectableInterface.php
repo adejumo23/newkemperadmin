@@ -10,6 +10,4 @@ namespace App\Di;
 interface InjectableInterface
 {
 
-    public function setDi($di);
-
 }

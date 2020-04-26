@@ -270,7 +270,8 @@ class Application implements
 
         $listeners = array_unique(array_merge($listenersFromConfigService, $listenersFromAppConfig));
 
-        return $serviceManager->get('Application')->bootstrap($listeners);
+        $application = $serviceManager->get('Application');
+        return $application->bootstrap($listeners);
     }
 
     /**

@@ -7,48 +7,46 @@
 namespace App\Di;
 
 
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-class InjectorFactory
+class InjectorFactory implements FactoryInterface
 {
+    protected $serviceManager;
+    protected $request;
+    protected $response;
+
+
     /**
-     * @param string $className
-     * @return mixed
+     * Create an object
+     *
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return object
      * @throws \Exception
      */
-    public function getInstance($className)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (class_exists($className)) {
-            $classObject = new $className;
-            $reflectionClass = new \ReflectionClass($className);
-            $classProperties = $reflectionClass->getProperties();
-            foreach ($classProperties as $property) {
-                $propertyComment = $property->getDocComment();
-                if (strpos($propertyComment, '@Inject')) {
-                    $annotationArr = explode("\"", $propertyComment);
-                    $injectionClass = $annotationArr[1];
-                    if (class_exists($injectionClass)) {
-                        $injectionClassInstance = $this->getInstance($injectionClass);
-                        $propertyName = $property->getName();
-                        $setterMethod = 'set' . $propertyName;
-                        if (method_exists($classObject, $setterMethod)) {
-                            $classObject->{$setterMethod}($injectionClassInstance);
-                            continue;
-                        }
-                    }
-                    throw  new \Exception('Class not found for property injection: ' . $className);
-                }
-            }
-            $this->init($classObject);
-            return $classObject;
-        }
-        throw  new \Exception('Class not found for injection: ' . $className);
+        return new Injector($container);
     }
 
-    private function init(&$classObject)
+    /**
+     * Can the factory create an instance for the service?
+     *
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
-        if ($classObject instanceof InjectableInterface) {
-            $classObject->setDi($this);
+        $reflectionClass = new \ReflectionClass($requestedName);
+        if ($reflectionClass->implementsInterface(InjectableInterface::class)) {
+            return true;
         }
+        return false;
     }
+
 
 }

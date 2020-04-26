@@ -23,4 +23,8 @@ interface RequestInterface extends \Zend\Stdlib\RequestInterface
 
     public function getHeader($name, $default = false);
 
+    public function isPost();
+
+    public function isXmlHttpRequest();
+
 }

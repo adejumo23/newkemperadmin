@@ -9,11 +9,11 @@ namespace App\Model\Repository;
 
 use App\Db\Connection;
 use App\Di\InjectableInterface;
+use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\ResultSet\ResultSet;
 
 class AbstractRepository implements InjectableInterface
 {
-
-    protected $di;
 
     /**
      * @var Connection
@@ -29,11 +29,18 @@ class AbstractRepository implements InjectableInterface
     /**
      * @param $sql
      * @param array $params
-     * @return \Zend\Db\Adapter\Driver\ResultInterface|null
+     * @return array|null
      */
     public function executeQuery($sql, $params = [])
     {
-        return $this->connection->executeQuery($sql, $params);
+        $result = $this->connection->executeQuery($sql, $params);
+        if ($result instanceof ResultInterface && $result->isQueryResult()) {
+            $resultSet = new ResultSet;
+            $resultSet->initialize($result);
+            $data = $resultSet->toArray();
+            return $data;
+        }
+        return null;
     }
 
     /**
@@ -44,12 +51,5 @@ class AbstractRepository implements InjectableInterface
     {
         $this->connection = $connection;
         return $this;
-    }
-
-
-
-    public function setDi($di)
-    {
-        $this->di = $di;
     }
 }

@@ -1,16 +1,74 @@
 <?php
 /**
  * @var \Zend\View\Helper\ViewModel $helper
+ * @var string $redirect
  */
+
+$loginAction = "login";
+if ($redirect) {
+    $loginAction .= "?redirect=" . $redirect;
+}
 ?>
-Login:
-<br>
-<form method="post" action="login/login">
-    <br>
-    <input name="username" type="text"/>
-    <br>
-    <input name="password" type="password"/>
-    <br>
-    <input type="submit"></input>
-    <br>
-</form>
+<!--Login:-->
+<!--<br>-->
+<!--<form method="post" action="--><?//=$loginAction?><!--">-->
+<!--    <br>-->
+<!--    <input name="username" type="text"/>-->
+<!--    <br>-->
+<!--    <input name="password" type="password"/>-->
+<!--    <br>-->
+<!--    <input type="submit"></input>-->
+<!--    <br>-->
+<!--</form>-->
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4">
+                    <div class="px-2">
+<!--                                 Default form login-->
+                                <form method="post" class="justify-content-center"action="<?=$loginAction?>">
+                                    <p class="h4 mb-4">Sign in</p>
+<!--                                     Email-->
+                                    <input type="text" class="form-control mb-4" placeholder="E-mail" name="username" >
+<!--                                     Password-->
+                                    <input type="password"  class="form-control mb-4" placeholder="Password" name="password">
+
+                                    <div class="d-flex justify-content-around">
+                                        <div>
+<!--                                             Remember me-->
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+                                                <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
+                                            </div>
+                                        </div>
+                                        <div>
+<!--                                             Forgot password-->
+                                            <a href="">Forgot password?</a>
+                                        </div>
+                                    </div>
+
+<!--                                     Sign in button-->
+                                    <button class="btn btn-info btn-block my-4" type="submit">Sign in</button>
+
+<!--                                     Register-->
+                                    <p>Not a member?
+                                        <a href="">Register</a>
+                                    </p>
+
+<!--                                     Social login-->
+                                    <p>or sign in with:</p>
+
+                                    <a href="#" class="mx-2" role="button"><i class="fab fa-facebook-f light-blue-text"></i></a>
+                                    <a href="#" class="mx-2" role="button"><i class="fab fa-twitter light-blue-text"></i></a>
+                                    <a href="#" class="mx-2" role="button"><i class="fab fa-linkedin-in light-blue-text"></i></a>
+                                    <a href="#" class="mx-2" role="button"><i class="fab fa-github light-blue-text"></i></a>
+
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+<!--</div>-->
+<!-- Default form login -->

@@ -58,6 +58,7 @@ class ApiController extends AbstractAppController
      */
     public function indexAction()
     {
+        $identity = $this->getIdentity();
         $reps = $this->getRepresentatives();
         echo "<pre>";
         print_r($reps);
