@@ -70,4 +70,32 @@ class DisposerService implements InjectableInterface
         return $result;
     }
 
+    public function getDisposerPremiumPerYear()
+    {
+        $resultDisposerList = $this->disposersRepo->getDisposers();
+        $resultDisposerYears = $this->disposersRepo->getDisposerYears();
+        $ids = array_column($resultDisposerList, 'disposer_id');
+        $outputDisposerList = implode(',', $ids);
+        $outputDisposerList = explode(',',$outputDisposerList);
+        $ids = array_column($resultDisposerList, 'disposer_description');
+        $names = implode(',', $ids);
+        $names = explode(',',$names);
+        $ids = array_column($resultDisposerYears, 'year');
+        $outputYears = implode(',', $ids);
+        $outputYears = explode(',',$outputYears);
+        $premiumResult = [];
+        foreach($outputDisposerList as $data => $information ) {
+            $returnedPremium = $this->disposersRepo->getTotalPremiumPerPerYearDisposer($information);
+             $ids = array_column($returnedPremium, 'premiumYearly');
+            $outputPremiumYearly = implode(',', $ids);
+            $premiumResult[$information] = $outputPremiumYearly;
+        }
+        $resultData =[
+            'chartData' => $premiumResult,
+            'chartLabels' => $outputYears,
+            'names' => $names
+        ];
+        return $resultData;
+    }
+
 }

@@ -27,15 +27,14 @@ class LoginController extends AbstractActionController
     protected $userService;
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function indexAction()
     {
-        return new ViewModel();
-    }
-
-    public function loginAction()
-    {
+//        return new ViewModel(['redirect' => $this->request->getQuery('redirect')]);
+        if (!$this->request->isPost()) {
+            return new ViewModel(['redirect' => $this->request->getQuery('redirect')]);
+        }
         $user = $this->request->getPost('username');
         $pass = $this->request->getPost('password');
 
@@ -44,8 +43,20 @@ class LoginController extends AbstractActionController
         if ($result) {
             return new ViewModel($result);
         }
-        $this->redirect()->toRoute('kemperadmin:conservation', []);
-//        $this->redirect()->toRoute('kemperadmin:api', []);
+        if ($this->request->getQuery('redirect')) {
+            return $this->redirect()->toUrl($this->request->getQuery('redirect'));
+        }
+        return $this->redirect()->toRoute('kemperadmin:home', []);
+    }
+
+    public function logoutAction()
+    {
+        //I think that is it lol
+        //user -> user info
+        //role -> permissions
+        //user * role = user permission map for the session //should be destroyed on logout and recreated when logging in
+        $this->userService->clearCurrentSession();
+        return $this->redirect()->toRoute('kemperadmin:login', []);
     }
 
     /**

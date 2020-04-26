@@ -6,7 +6,6 @@ function filterDisposerData() {
         url = $('[name="disposerDataUrl"]').val();
     }
     var data = {};
-
     $.post(url, data, function (response) {
         response = JSON.parse(response);
         if (!response.status) {
@@ -17,9 +16,8 @@ function filterDisposerData() {
     });
 }
 function dispositionChart() {
-    var url = "grabDispositions.php";
-    var dummyData = "activeDispositions";
-    var data = {'activeDispositions': dummyData};
+    var url = $('[name="dispositionDataUrl"]').val();
+    var data = {};
     $.get(url, data, function (response) {
         response = JSON.parse(response);
         if (response.status) {
@@ -28,7 +26,20 @@ function dispositionChart() {
     });
 
 }
+function filterYearlyDisposerData(){
+    var url = $('[name="yearlyDataUrl"]').val();
+    var data = {};
+    $.get(url, data, function (response) {
+        response = JSON.parse(response);
+        if (response.status) {
+            showYearlyChartData(response);
+        }
+    });
+}
+
 $(document).ready(function () {
+    $('.datepicker').pickadate();
     filterDisposerData();
     dispositionChart();
+    filterYearlyDisposerData();
 });

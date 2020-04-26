@@ -1,10 +1,12 @@
 <?php
 /**
- * @var \Zend\View\Helper\ViewModel $helper
+ * @var ViewModel $helper
  */
 /**
  * @var array $disposerArray
  * @var string $disposerDataUrl
+ * @var string $dispositionDataUrl
+ * @var string $yearlyDataUrl
  *
  */
 
@@ -16,8 +18,10 @@ foreach ($disposerArray as $data => $information):
 <?php
 endforeach;
 
-?>
-<script src="../../js/kemperadmin/conservation-dashboard.js"></script>
+use Zend\View\Helper\ViewModel; ?>
 <script src="../../js/kemperadmin/filter-dropdown-item.js"></script>
+<script src="../../js/kemperadmin/conservation-dashboard.js"></script>
 
 <input type="hidden" name="disposerDataUrl" value="<?=$disposerDataUrl?>">
+<input type="hidden" name="dispositionDataUrl" value="<?=$dispositionDataUrl?>">
+<input type="hidden" name="yearlyDataUrl" value="<?=$yearlyDataUrl?>">

@@ -40,7 +40,7 @@ class ControllerManager extends \Zend\Mvc\Controller\ControllerManager
      * @param DispatchableInterface $controller
      * @throws \ReflectionException
      */
-    public function injectAnnotations(ContainerInterface $container, $controller)
+    public function injectAnnotations(ContainerInterface &$container, $controller)
     {
         if (method_exists($controller, 'setContainer')) {
             $controller->setContainer($container);

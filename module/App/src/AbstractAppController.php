@@ -49,6 +49,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
      */
     protected $userService;
 
+    protected $redirection;
     /**
      * @param UserService $userService
      * @return AbstractAppController
@@ -58,6 +59,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
         $this->userService = $userService;
         return $this;
     }
+
 
     /**
      * Register the default events for this controller
@@ -83,11 +85,13 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     {
         $this->authService = $this->userService->getAuthenticationService();
         if (!$this->authService->hasIdentity()) {
-            return $this->redirect()->toRoute('kemperadmin:login');
+            $currentUrl = $_SERVER['REQUEST_URI'];
+            $this->redirection = $this->getRedirection();
+            return $this->redirect()->toUrl('/newkemperadmin/app/index.php/login'.'?redirect='.$currentUrl);
 //            throw new \Exception("Invalid Session. Please login again.");
         }
         $this->identity = $this->authService->getIdentity();
-    }
+     }
 
     protected function getIdentity()
     {
@@ -114,5 +118,19 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
         $this->container = $container;
         return $this;
     }
+    /**
+     * @return mixed
+     */
+    public function getRedirection()
+    {
+        return $this->redirection;
+    }
+
+    public function setRedirection()
+    {
+        $this->redirection = $_SERVER['REQUEST URI'];
+        return $this;
+    }
+
 
 }

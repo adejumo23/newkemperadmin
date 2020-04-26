@@ -288,6 +288,199 @@ function renderDispositionChart(data,labels) {
         }
     });
 }
+function showYearlyChartData(response) {
+    if (!response.status) {
+        alert('Your Customer Service Rep Conserved no premiums so far');
+    } else {
+        var ctxL = document.getElementById("yearlyEarningPerYear");
+        var dataOne = JSON.parse("[" + response.chartData[1] + "]");
+        var dataTwo = JSON.parse("[" + response.chartData[2] + "]");
+        var dataThree = JSON.parse("[" + response.chartData[3]+ "]");
+        var nameOne = response.names[0];
+        var nameTwo = response.names[1];
+        var nameThree = response.names[2];
+        renderYearlyChart(ctxL,dataOne,dataTwo,dataThree,nameOne,nameTwo,nameThree,response.chartLabels);
+    }
+}
+function renderYearlyChart($element, dataOne,dataTwo,dataThree, nameOne,nameTwo,nameThree,labels) {
+    var myLineChart = new Chart($element, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label:nameOne,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 99, 132, 1)',
+                ],
+                data: dataOne,
+            },
+                {
+                    label: nameTwo,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    data: dataTwo,
+                },
+                {
+                    label:nameThree,
+                    backgroundColor: [
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)',
+                        'rgba(0, 99, 132, 0.5)'
+
+                    ],
+                    borderColor: [
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)',
+                        'rgba(0, 128, 132, 1)'
+                    ],
+                    data: dataThree,
+                }],
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Year Earned Premium Per Rep'
+            },
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
+            },
+            scales: {
+                xAxes: [{
+                    time: {
+                        unit: 'date'
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 7,
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        maxTicksLimit: 5,
+                        padding: 10,
+                        // Include a dollar sign in the ticks
+                        callback: function(value, index, values) {
+                            return '$' + number_format(value);
+                        }
+                    },
+                    gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        borderDash: [2],
+                        zeroLineBorderDash: [2]
+                    }
+                }],
+            },
+            legend: {
+                display: true
+            },
+            tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                titleMarginBottom: 10,
+                titleFontColor: '#6e707e',
+                titleFontSize: 14,
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                intersect: false,
+                mode: 'index',
+                caretPadding: 10,
+                callbacks: {
+                    label: function(tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+
+                    }
+                }
+            }
+
+        },
+    });
+}
+
 $(document).on('click', '.chartDisposerItem', filterDisposerData);
 $(document).on('click', '.filterSubmit', checkFilter);
 $(document).on('click', '#importList', handleImportSubmit);

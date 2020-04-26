@@ -14,7 +14,6 @@ use phpDocumentor\Reflection\Types\Mixed_;
 class ConservationService implements InjectableInterface
 {
 
-
     private $conservedPremium;
     private $conservedPaidPremium;
     private $disposedAndOpen;
@@ -32,6 +31,12 @@ class ConservationService implements InjectableInterface
      * @Inject(name="KemperAdmin\Model\Service\DisposerService")
      */
     protected $disposerService;
+
+    /**
+     * @var DispositionService
+     * @Inject(name="KemperAdmin\Model\Service\DispositionService")
+     */
+    protected $dispositionService;
 
     public function getConservationData($startDate, $endDate)
     {
@@ -131,7 +136,7 @@ class ConservationService implements InjectableInterface
     public function initConservedPremium()
     {
         $result = $this->conservationRepo->getConservedPremium();
-        $conservedPremium = $this->conservedPaidPremium + $result;
+        $conservedPremium =  $result;
         $this->setConservedPremium($conservedPremium);
     }
 
@@ -220,6 +225,11 @@ class ConservationService implements InjectableInterface
     public function setDisposerService($disposerService)
     {
         $this->disposerService = $disposerService;
+        return $this;
+    }
+    public function setDispositionService($dispositionService)
+    {
+        $this->dispositionService = $dispositionService;
         return $this;
     }
 }

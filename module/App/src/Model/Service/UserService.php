@@ -57,7 +57,7 @@ class UserService implements InjectableInterface, ContainerAwareInterface
             ->setIdentity($username)
             ->setCredential($password)
         ;
-        $this->getAuthenticationService()->getStorage()->clear();
+        $this->clearCurrentSession();
         $result = $this->getAuthenticationService()->authenticate($authAdapter);
         if (!$result->isValid()) {
             switch ($result->getCode()) {
@@ -147,5 +147,10 @@ class UserService implements InjectableInterface, ContainerAwareInterface
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    public function clearCurrentSession()
+    {
+        $this->getAuthenticationService()->getStorage()->clear();
     }
 }

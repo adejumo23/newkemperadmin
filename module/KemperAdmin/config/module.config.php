@@ -9,7 +9,7 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 return [
     'router' => [
         'routes' => [
-            'kemperadminhome' => [
+            'kemperadmin:home' => [
                 'type'    => Literal::class,
                 'options' => [
                     'route'    => '/',
@@ -70,6 +70,37 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:conservation:disposition' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/conservation/dispositionData',
+                    'defaults' => [
+                        'controller' => Controller\ConservationController::class,
+                        'action'     => 'dispositionData',
+                    ],
+                ],
+            ],
+            'kemperadmin:conservation:yearly' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/conservation/yearlyData',
+                    'defaults' => [
+                        'controller' => Controller\ConservationController::class,
+                        'action'     => 'yearlyData',
+                    ],
+                ],
+            ],
+            'kemperadmin:production' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/production/productionData/:managerId',
+                    'defaults' => [
+                        'controller' => Controller\ProductionController::class,
+                        'action'     => 'productionData',
+                        'managerId' => '',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
@@ -79,6 +110,7 @@ return [
             Controller\ReportController::class => InvokableFactory::class,
             Controller\ApiController::class => InvokableFactory::class,
             Controller\ConservationController::class => InvokableFactory::class,
+            Controller\ProductionController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [
@@ -94,7 +126,10 @@ return [
             'kemper-admin/login/login' => __DIR__ . '/../view/kemperadmin/login/login.phtml',
             'kemper-admin/report/index' => __DIR__ . '/../view/kemperadmin/report/index.phtml',
             'kemper-admin/conservation/index' => __DIR__ . '/../view/kemperadmin/conservation/index.phtml',
+            'kemper-admin/production/index' => __DIR__ . '/../view/kemperadmin/production/index.phtml',
             'kemper-admin/conservation/chartdatafilterdropdown' => __DIR__ . '/../view/kemperadmin/conservation/chartDataFilterDropdown.phtml',
+            'kemper-admin/conservation/filterdropdowndashboard' => __DIR__ . '/../view/kemperadmin/conservation/filterDropdownDashboard.phtml',
+            'kemper-admin/production/filterdropdowndashboard' => __DIR__ . '/../view/kemperadmin/production/filterDropdownDashboard.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],

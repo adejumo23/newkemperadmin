@@ -48,8 +48,10 @@ return [
     ],
     'session_config' => [
         'remember_me_seconds' => 1800,
+//        'remember_me_seconds' => 10,
         'name' => 'Kemper_Auth',
         'cookie_httponly' => false,
+//        'cookie_lifetime' => 10,
         'cookie_lifetime' => 3600,
         'save_path' => 'c:/devapps/php/php_sessions',
         'use_cookies' => true,
@@ -63,9 +65,9 @@ return [
     ],
     'kemperdb' => [
         'driver' => 'sqlsrv',
-        'hostname' => 'localhost\SQLEXPRESS',
-        'username' => 'sa',
-        'password' => 'tiger',
-        'database' => 'kemperadmin',
+        'hostname' => 'rniokc81943\sqlexpress',
+        'username' => '',
+        'password' => '',
+        'database' => 'data_analytics',
     ],
 ];
