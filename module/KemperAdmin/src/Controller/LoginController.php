@@ -33,7 +33,10 @@ class LoginController extends AbstractActionController
     {
 //        return new ViewModel(['redirect' => $this->request->getQuery('redirect')]);
         if (!$this->request->isPost()) {
-            return new ViewModel(['redirect' => $this->request->getQuery('redirect')]);
+            if ($_GET['redirect_uri']) {
+                return $this->redirect()->toUrl('../../login.php?redirect_uri=' . $_GET['redirect_uri']);
+            }
+            return $this->redirect()->toUrl('../../login.php');
         }
         $user = $this->request->getPost('username');
         $pass = $this->request->getPost('password');
@@ -43,8 +46,8 @@ class LoginController extends AbstractActionController
         if ($result) {
             return new ViewModel($result);
         }
-        if ($this->request->getQuery('redirect')) {
-            return $this->redirect()->toUrl($this->request->getQuery('redirect'));
+        if ($this->request->getQuery('redirect_uri')) {
+            return $this->redirect()->toUrl($this->request->getQuery('redirect_uri'));
         }
         return $this->redirect()->toRoute('kemperadmin:home', []);
     }

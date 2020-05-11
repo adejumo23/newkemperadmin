@@ -17,6 +17,10 @@ interface RequestInterface extends \Zend\Stdlib\RequestInterface
 
     public function getPost($name = null, $default = null);
 
+    public function getServer($name = null, $default = null);
+
+    public function getBasePath();
+
     public function getCookie();
 
     public function getFiles($name = null, $default = null);
