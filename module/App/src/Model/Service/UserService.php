@@ -11,6 +11,7 @@ use App\Db\Connection;
 use App\Di\ContainerAwareInterface;
 use App\Di\InjectableInterface;
 use Interop\Container\ContainerInterface;
+use App\Model\Repository\UserRepository;
 use Zend\Authentication\Result;
 use Zend\Authentication\Storage\Session;
 use Zend\Db\Adapter\Adapter;
@@ -35,6 +36,12 @@ class UserService implements InjectableInterface, ContainerAwareInterface
      * @Inject(name="App\Db\Connection")
      */
     protected $connection;
+
+    /**
+     * @var UserRepository
+     * @Inject(name="App\Model\Repository\UserRepository")
+     */
+    protected $userRepo;
 
     /**
      * @var ContainerInterface
@@ -85,6 +92,7 @@ class UserService implements InjectableInterface, ContainerAwareInterface
         );
         $data = $authAdapter->getResultRowObject(null, $columnsToOmit);
         $identity = $this->createIdentity($data);
+        $this->setPrivileges($identity);
 
 //        $sessionManager = new SessionManager();
 //
@@ -152,5 +160,24 @@ class UserService implements InjectableInterface, ContainerAwareInterface
     public function clearCurrentSession()
     {
         $this->getAuthenticationService()->getStorage()->clear();
+    }
+
+    /**
+     * @param Identity $identity
+     */
+    private function setPrivileges(&$identity)
+    {
+        $privs = $this->userRepo->findUserPrivsByUsername($identity->getUsername());
+        $identity->setPrivs($privs);
+    }
+
+    /**
+     * @param \UserRepository $userRepo
+     * @return UserService
+     */
+    public function setUserRepo($userRepo)
+    {
+        $this->userRepo = $userRepo;
+        return $this;
     }
 }

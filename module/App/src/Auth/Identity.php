@@ -24,6 +24,11 @@ class Identity
     protected $lastname;
 
     /**
+     * @var array
+     */
+    protected $privs;
+
+    /**
      * @return string
      */
     public function getUsername()
@@ -76,5 +81,29 @@ class Identity
         $this->lastname = $lastname;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getPrivs()
+    {
+        return $this->privs;
+    }
+
+    /**
+     * @param array $privs
+     * @return Identity
+     */
+    public function setPrivs($privs)
+    {
+        $this->privs = $privs;
+        return $this;
+    }
+
+    public function getPriv($privName)
+    {
+        return $this->privs[$privName]??0;
+    }
+
 
 }

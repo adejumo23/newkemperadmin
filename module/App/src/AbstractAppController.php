@@ -34,7 +34,7 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     protected $authService;
 
     /**
-     * @var ContainerInterface
+     * @var ServiceManager
      */
     protected $container;
 
@@ -85,10 +85,12 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     {
         $this->authService = $this->userService->getAuthenticationService();
         if (!$this->authService->hasIdentity()) {
-            $currentUrl = $_SERVER['REQUEST_URI'];
-            $this->redirection = $this->getRedirection();
+            $currentUrl = $this->request->getServer('REQUEST_URI');
+            $config = $this->container->getContainer()->get('config');
+            $application_url = $config['application_url'];
+            $hostname = $config['hostname'];
             //Todo: Figure out current URL - just needs the controller path part from the request/route match
-            return $this->redirect()->toUrl('/newkemperadmin/app/index.php/login'.'?redirect_uri='.$currentUrl);
+            return $this->redirect()->toUrl($application_url . '/login.php'.'?redirect_uri=' . $hostname . $currentUrl);
 //            throw new \Exception("Invalid Session. Please login again.");
         }
         $this->identity = $this->authService->getIdentity();

@@ -51,7 +51,7 @@ $redirect = $_GET['redirect_uri'];
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
         <div class="container">
-            <a class="navbar-brand" href="#"><strong>MDB</strong></a>
+            <a class="navbar-brand" href="#"><strong>Kemper Health</strong></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-7"
                     aria-controls="navbarSupportedContent-7" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -109,7 +109,7 @@ $redirect = $_GET['redirect_uri'];
                                 </div>
 
                                 <div class="text-center">
-                                    <button class="btn purple-gradient btn-lg">Sign up</button>
+                                    <button class="btn purple-gradient btn-lg">Sign in</button>
                                     <hr class="mt-4">
                                     <div class="inline-ul text-center d-flex justify-content-center">
                                         <a class="p-2 m-2 fa-lg tw-ic"><i class="fab fa-twitter white-text"></i></a>
