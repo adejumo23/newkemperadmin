@@ -9,6 +9,7 @@ namespace KemperAdmin\Controller;
 
 use App\Model\Service\UserService;
 use App\Request\RequestInterface;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -27,11 +28,10 @@ class LoginController extends AbstractActionController
     protected $userService;
 
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @return Response|ViewModel
      */
     public function indexAction()
     {
-//        return new ViewModel(['redirect' => $this->request->getQuery('redirect')]);
         if (!$this->request->isPost()) {
             if ($_GET['redirect_uri']) {
                 return $this->redirect()->toUrl('../../login.php?redirect_uri=' . $_GET['redirect_uri']);

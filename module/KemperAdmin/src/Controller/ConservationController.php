@@ -65,10 +65,10 @@ class ConservationController extends AbstractAppController
             'dispositionDataUrl'=> $dispositionDataUrl,
             'yearlyDataUrl'=> $yearlyDataUrl
             ]);
+        $this->layout()->myvar =  $firstName;
         $viewModel->setTemplate('kemper-admin/conservation/chartdatafilterdropdown');
         $filterModel = new ViewModel(['filterDataDatesUrl' => 'kemperadmin:conservation']);
         $filterModel->setTemplate('kemper-admin/conservation/filterdropdowndashboard');
-
         $data['chartdatafilterdropdown'] = $viewModel;
         $data['filterdropdowndashboard'] = $filterModel;
         $data['firstName'] = $firstName;
