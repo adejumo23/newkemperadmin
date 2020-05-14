@@ -1,5 +1,17 @@
+<?php
+/**
+ * @var ViewModel $helper
+ * @var $privilege_production_dashboard_view
+ * @var $privilege_conservation_dashboard_view
+ */
+use Zend\View\Model\ViewModel;
+
+$this->headTitle("Kemper Health - Home");
+?>
+
+
 <div class="jumbotron">
-    <h1>Welcome to <span class="zf-green">Kemper Admin</span></h1>
+    <h1>Welcome to <span class="font-weight-bold mt-lg-5 mb-5 pb-4">Kemper Health</span></h1>
     <p>
        Please click on one of the dashboards:
     </p>
@@ -7,8 +19,55 @@
 
 <div class="row">
 
-    <div class="col-md-4">
-        <a href="conservation">
+
+    <?php
+    if($privilege_production_dashboard_view == 1):?>
+        <div class="col-lg-4 col-md-12 mb-4">
+
+            <!-- Card -->
+            <div class="card card-cascade narrower">
+
+                <!-- Card image -->
+                <div class="view view-cascade gradient-card-header blue-gradient">
+
+                    <h2 class="card-header-title">Production</h2>
+
+                </div>
+                <!-- Card image -->
+
+                <!-- Card content -->
+                <div class="card-body card-body-cascade text-center">
+
+                    <p class="card-text">
+                        Production Dashboard Content
+                        This would lead you to the production dashboard to
+                        see production per agent,agent or per manager</p>
+                    <a href="production" class="btn btn-primary waves-effect waves-light">Proceed</a>
+                </div>
+                <!-- Card content -->
+
+            </div>
+            <!-- Card -->
+
+        </div>
+    <!--    <div class="card card-cascade narrower">
+
+         Card image
+        <div class="view view-cascade gradient-card-header purple-gradient">
+
+            <h2 class="card-header-title">Mattonit</h2>
+
+            <p>The Boar</p>
+
+            <div class="text-center">
+                Conservation Dashboard Content
+                This would lead you to the conservation dashboard or
+                depending on your access will lead you to
+                customer service.
+            </div>
+        </div>
+    </div>
+--><!--        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Conservation Dashboard</h2>
@@ -16,13 +75,85 @@
                 <div class="card-body">
                     <p>
                         Conservation Dashboard Content
+                        This would lead you to the conservation dashboard or
+                        depending on your access will lead you to
+                        customer service.
                     </p>
+                    <p><a class="btn btn-primary pull-right" href="conservation">Conservation</a></p>
                 </div>
             </div>
-        </a>
     </div>
+-->
+    <?php
+    endif;
+    ?>
+    <?php
+    if($privilege_conservation_dashboard_view == 1):?>
+        <div class="col-lg-4 col-md-12 mb-4">
 
-    <div class="col-md-4">
+            <!-- Card -->
+            <div class="card card-cascade narrower">
+
+                <!-- Card image -->
+                <div class="view view-cascade gradient-card-header blue-gradient">
+
+                    <h2 class="card-header-title">Conservation</h2>
+
+                </div>
+                <!-- Card image -->
+
+                <!-- Card content -->
+                <div class="card-body card-body-cascade text-center">
+
+                    <p class="card-text">
+                        Conservation Dashboard Content
+                        This would lead you to the conservation dashboard or
+                        depending on your access will lead you to
+                        customer service..</p>
+                    <a href="conservation" class="btn btn-primary waves-effect waves-light">Proceed</a>
+                </div>
+                <!-- Card content -->
+
+            </div>
+            <!-- Card -->
+
+        </div>
+        <!--        <div class="card card-cascade narrower">
+
+                     Card image
+                    <div class="view view-cascade gradient-card-header purple-gradient">
+
+                        <h2 class="card-header-title">Mattonit</h2>
+
+                        <p>The Boar</p>
+
+                        <div class="text-center">
+                            Conservation Dashboard Content
+                            This would lead you to the conservation dashboard or
+                            depending on your access will lead you to
+                            customer service.
+                        </div>
+                    </div>
+                </div>
+        -->        <!--    <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Conservation Dashboard</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Conservation Dashboard Content
+                            This would lead you to the customer service or
+                            depending on your access
+                        </p>
+                        <p><a class="btn btn-primary pull-right" href="conservation">Conservation</a></p>
+                    </div>
+                </div>
+            </div>-->
+    <?php
+    endif;
+    ?>
+ <!--   <div class="col-md-4">
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">Discover Modules</h2>
@@ -40,23 +171,5 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Help &amp; Support</h2>
-            </div>
-            <div class="card-body">
-                <p>
-                    If you need any help or support while developing with ZF,
-                    you may reach us via IRC: <a href="irc://irc.freenode.net/zftalk">#zftalk on Freenode</a>.
-                    We'd love to hear any questions or feedback you may have
-                    regarding this release. Alternatively, you may subscribe
-                    and post questions to the <a href="http://framework.zend.com/archives/">mailing lists</a>.
-                </p>
-
-                <p><a class="btn btn-success pull-right" href="http://webchat.freenode.net?channels=zftalk" target="_blank">Ping us on IRC &raquo;</a></p>
-            </div>
-        </div>
-    </div>
+-->
 </div>

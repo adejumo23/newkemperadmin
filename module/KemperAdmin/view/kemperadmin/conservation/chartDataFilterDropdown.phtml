@@ -1,8 +1,10 @@
 <?php
 use Zend\View\Helper\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
+
 /**
  * @var ViewModel $helper
- * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var PhpRenderer $this
  */
 /**
  * @var array $disposerArray
@@ -11,18 +13,29 @@ use Zend\View\Helper\ViewModel;
  * @var string $yearlyDataUrl
  *
  */
+?>
 
-foreach ($disposerArray as $data => $information):
+<div class="d-flex">
+    <div class="dropdown mr-1">
+        <button type="button" class="btn badge info-color p-2 dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+            Disposers
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+       <?php foreach ($disposerArray as $data => $information):
     ?>
-    <a class="dropdown-item chartDisposerItem" href="#"
-       data-url="<?=$information['disposerDataUrl']?>"
-       data-chart-disposer="<?= $information['disposer_id'] ?>"><?= $information['disposer_description'] ?></a>
-<?php
+            <a class="dropdown-item chartDisposerItem" href="#"
+               data-url="<?=$information['disposerDataUrl']?>"
+               data-chart-disposer="<?= $information['disposer_id'] ?>"><?= $information['disposer_description'] ?></a>
+            <?php
 endforeach;
+       ?>
+        </div>
+    </div>
+</div>
 
-$this->inlineScript()->appendFile("../../js/kemperadmin/conservation-dashboard.js");
-$this->inlineScript()->appendFile("../../js/kemperadmin/filter-dropdown-item.js");
- ?>
+
+
 
 <input type="hidden" name="disposerDataUrl" value="<?=$disposerDataUrl?>">
 <input type="hidden" name="dispositionDataUrl" value="<?=$dispositionDataUrl?>">

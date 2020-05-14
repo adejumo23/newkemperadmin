@@ -1,3 +1,65 @@
+function renderDisposerChart(data, disposeData, labels) {
+    // Main chart
+    var ctxL = document.getElementById("earningVsDisposition").getContext('2d');
+    var myLineChart = new Chart(ctxL, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Premiums",
+                fillColor: "#fff",
+                backgroundColor: 'rgba(255, 255, 255, .3)',
+                borderColor: 'rgba(255, 255, 255)',
+                data: data,
+            },
+                {
+                    label: "Dispositions",
+                    fillColor: "#fff",
+                    backgroundColor: 'rgba(255, 255, 255, .6)',
+                    borderColor: 'rgba(255, 255, 255)',
+                    data: disposeData,
+                }]
+
+        },
+        options: {
+            legend: {
+                labels: {
+                    fontColor: "#fff",
+                }
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: true,
+                        color: "rgba(255,255,255,.25)"
+                    },
+                    ticks: {
+                        fontColor: "#fff",
+                    },
+                }],
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        display: true,
+                        color: "rgba(255,255,255,.25)"
+                    },
+                    ticks: {
+                        fontColor: "#fff",
+                    },
+                }],
+            }
+        }
+    });
+}
+function showChartData(response) {
+    if(response.status) {
+        var ctx = document.getElementById("earningVsDisposition");
+        renderDisposerChart(response.chartData,response.chartDisposed, response.chartLabels);
+    }
+    else{
+        alert('Your Customer Service Rep Conserved no premiums so far');
+    }
+}
 function filterDisposerData() {
     $('#earningVsDisposition').remove(); // this is my <canvas> element
     $('.chart-area').append('<canvas id="earningVsDisposition"><canvas>');
@@ -12,6 +74,57 @@ function filterDisposerData() {
             alert('Your Customer Service Rep Conserved no premiums so far');
         } else {
             showChartData(response);
+        }
+    });
+}
+function renderDispositionChart(data,labels) {
+    // Main chart
+    var ctxL = document.getElementById("popularDisposition").getContext('2d');
+    var myLineChart = new Chart(ctxL, {
+        type: 'horizontalBar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Dispositions",
+                fillColor: "#fff",
+                backgroundColor: 'rgba(255, 255, 255, .3)',
+                borderColor: 'rgba(255, 255, 255)',
+                data: data,
+            }]
+
+        },
+        options: {
+            legend: {
+                labels: {
+                    fontColor: "#fff",
+                }
+            },
+            title: {
+                display: true,
+                text: 'Popular disposition Listings',
+                fontColor: "#fff"
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: true,
+                        color: "rgba(255,255,255,.25)"
+                    },
+                    ticks: {
+                        fontColor: "#fff",
+                    },
+                }],
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        display: true,
+                        color: "rgba(255,255,255,.25)"
+                    },
+                    ticks: {
+                        fontColor: "#fff",
+                    },
+                }],
+            }
         }
     });
 }
@@ -44,51 +157,6 @@ function displayChart() {
         }
     });
 }
-function mainChart(){
-    // Main chart
-    var ctxL = document.getElementById("lineChart").getContext('2d');
-    var myLineChart = new Chart(ctxL, {
-        type: 'bar',
-        data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [{
-                label: "My First dataset",
-                fillColor: "#fff",
-                backgroundColor: 'rgba(255, 255, 255, .3)',
-                borderColor: 'rgba(255, 255, 255)',
-                data: [0, 10, 5, 2, 20, 30, 45],
-            }]
-        },
-        options: {
-            legend: {
-                labels: {
-                    fontColor: "#fff",
-                }
-            },
-            scales: {
-                xAxes: [{
-                    gridLines: {
-                        display: true,
-                        color: "rgba(255,255,255,.25)"
-                    },
-                    ticks: {
-                        fontColor: "#fff",
-                    },
-                }],
-                yAxes: [{
-                    display: true,
-                    gridLines: {
-                        display: true,
-                        color: "rgba(255,255,255,.25)"
-                    },
-                    ticks: {
-                        fontColor: "#fff",
-                    },
-                }],
-            }
-        }
-    });
-}
 // Material Select Initialization
 function materialSelect() {
     $('.mdb-select').material_select();
@@ -105,7 +173,7 @@ $(document).ready(function () {
     toolTips();
     filterDisposerData();
     dispositionChart();
-    filterYearlyDisposerData();
-    displayChart();
-    mainChart()
+    // filterYearlyDisposerData();
+    // displayChart();
+    // mainChart()
 });

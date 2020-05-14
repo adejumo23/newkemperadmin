@@ -43,6 +43,11 @@ class ConservationController extends AbstractAppController
         $identity = $this->getIdentity();
         $firstName = $identity->getFirstname();
         $lastName = $identity->getLastname();
+        $privilege_conservation_dashboard_view = $identity->getPriv('conservation_dashboard_view');
+        $privilege_conservation_listings = $identity->getPriv('conservation_listings');
+        $privilege_production_dashboard_view = $identity->getPriv('production_dashboard_view');
+        $privilege_production_reports = $identity->getPriv('production_reports');
+        $privilege_conservation_reports = $identity->getPriv('conservation_reports');
         $startDate = $this->request->getQuery('startdate');
         $endDate = $this->request->getQuery('enddate');
 
@@ -65,7 +70,19 @@ class ConservationController extends AbstractAppController
             'dispositionDataUrl'=> $dispositionDataUrl,
             'yearlyDataUrl'=> $yearlyDataUrl
             ]);
-        $this->layout()->myvar =  $firstName;
+        $this->layout()->firstName =  $firstName;
+        $this->layout()->privilege = [
+            'privilege_conservation_dashboard_view'=> $privilege_conservation_dashboard_view,
+            'privilege_conservation_listings'=> $privilege_conservation_listings,
+            'privilege_production_dashboard_view'=> $privilege_production_dashboard_view,
+            'privilege_production_reports'=> $privilege_production_reports,
+            'privilege_conservation_reports'=> $privilege_conservation_reports,
+        ];
+        $this->layout()->privilege_conservation_dashboard_view =  $privilege_conservation_dashboard_view;
+        $this->layout()->privilege_conservation_listings =  $privilege_conservation_listings;
+        $this->layout()->privilege_production_dashboard_view =  $privilege_production_dashboard_view;
+        $this->layout()->privilege_production_reports =  $privilege_production_reports;
+        $this->layout()->privilege_conservation_reports =  $privilege_conservation_reports;
         $viewModel->setTemplate('kemper-admin/conservation/chartdatafilterdropdown');
         $filterModel = new ViewModel(['filterDataDatesUrl' => 'kemperadmin:conservation']);
         $filterModel->setTemplate('kemper-admin/conservation/filterdropdowndashboard');

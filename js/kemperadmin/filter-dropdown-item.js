@@ -201,16 +201,7 @@ function renderChart($element, data, disposeData, labels) {
         },
     });
 }
-function showChartData(response) {
-    if(response.status) {
-        var ctx = document.getElementById("earningVsDisposition");
-        renderChart(ctx, response.chartData,response.chartDisposed, response.chartLabels);
-    }
-    else{
-        alert('Your Customer Service Rep Conserved no premiums so far');
-    }
 
-}
 function checkFilter(){
     var filterRange = [];
     var startingDate = document.getElementById("startingDate").value;
@@ -252,42 +243,7 @@ function checkFilter(){
 //         }
 //     });
 // }
-function renderDispositionChart(data,labels) {
-    new Chart(document.getElementById("popularDisposition"), {
-        type: 'horizontalBar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: "Dispositions",
-                    backgroundColor:   ['rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)'
-                    ],
-                    data: data
-                }
-            ]
-        },
-        options: {
-            legend: {display: false},
-            title: {
-                display: true,
-                text: 'Popular disposition Listings'
-            }
-        }
-    });
-}
+
 function showYearlyChartData(response) {
     if (!response.status) {
         alert('Your Customer Service Rep Conserved no premiums so far');
