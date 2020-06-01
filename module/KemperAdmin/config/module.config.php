@@ -2,9 +2,11 @@
 
 namespace KemperAdmin;
 
+use App\Di\AbstractFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use Zend\View\Strategy\JsonStrategy;
 
 return [
     'router' => [
@@ -42,10 +44,43 @@ return [
             'kemperadmin:reports' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/reports[/:action]',
+                    'route'    => '/reportcenter/index[/:report-title]',
                     'defaults' => [
                         'controller' => Controller\ReportController::class,
                         'action'     => 'index',
+                        'report-title' => '',
+                    ],
+                ],
+            ],
+            'kemperadmin:report-center' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/reportcenter[/:classification]',
+                    'defaults' => [
+                        'controller' => Controller\ReportController::class,
+                        'action'     => 'reportCenter',
+                        'classification' => '',
+                    ],
+                ],
+            ],
+            'kemperadmin:generatereport' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/reportcenter/generate[/:report-title]',
+                    'defaults' => [
+                        'controller' => Controller\ReportController::class,
+                        'action'     => 'generateReport',
+                        'report-title' => '',
+                    ],
+                ],
+            ],
+            'kemperadmin:recentreports' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/reportcenter/recentreports',
+                    'defaults' => [
+                        'controller' => Controller\ReportController::class,
+                        'action'     => 'recentReports',
                     ],
                 ],
             ],
@@ -80,17 +115,28 @@ return [
                     ],
                 ],
             ],
-            'kemperadmin:conservation:yearly' => [
+            'kemperadmin:conservation:productstats' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/conservation/yearlyData',
+                    'route'    => '/conservation/productStatsData',
                     'defaults' => [
                         'controller' => Controller\ConservationController::class,
-                        'action'     => 'yearlyData',
+                        'action'     => 'productStatsData',
                     ],
                 ],
             ],
             'kemperadmin:production' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/production',
+                    'defaults' => [
+                        'controller' => Controller\ProductionController::class,
+                        'action'     => 'index',
+                        'managerId' => '',
+                    ],
+                ],
+            ],
+            'kemperadmin:production:productiondata' => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'    => '/production/productionData/:managerId',
@@ -98,6 +144,16 @@ return [
                         'controller' => Controller\ProductionController::class,
                         'action'     => 'productionData',
                         'managerId' => '',
+                    ],
+                ],
+            ],
+            'kemperadmin:production:hierarchydata' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/production/hierarchyData',
+                    'defaults' => [
+                        'controller' => Controller\ProductionController::class,
+                        'action'     => 'hierarchyData',
                     ],
                 ],
             ],
@@ -113,7 +169,14 @@ return [
             Controller\ProductionController::class => InvokableFactory::class,
         ],
     ],
+    'service_manager' => [
+        'abstract_factories' => [
+            AbstractFactory::class,
+        ],
+    ],
+    'reportConfig' => include_once __DIR__ . '/reports.config.php',
     'view_manager' => [
+//        'strategies' => [JsonStrategy::class],
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
@@ -121,20 +184,14 @@ return [
         'exception_template'       => 'error/index',
         'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-            'kemper-admin/index/index' => __DIR__ . '/../view/kemperadmin/index/index.phtml',
-            'kemper-admin/login/index' => __DIR__ . '/../view/kemperadmin/login/index.phtml',
-            'kemper-admin/login/login' => __DIR__ . '/../view/kemperadmin/login/login.phtml',
-            'kemper-admin/report/index' => __DIR__ . '/../view/kemperadmin/report/index.phtml',
-            'kemper-admin/conservation/index' => __DIR__ . '/../view/kemperadmin/conservation/index.phtml',
-            'kemper-admin/production/index' => __DIR__ . '/../view/kemperadmin/production/index.phtml',
-            'kemper-admin/conservation/chartdatafilterdropdown' => __DIR__ . '/../view/kemperadmin/conservation/chartDataFilterDropdown.phtml',
-            'kemper-admin/conservation/filterdropdowndashboard' => __DIR__ . '/../view/kemperadmin/conservation/filterDropdownDashboard.phtml',
-            'kemper-admin/production/filterdropdowndashboard' => __DIR__ . '/../view/kemperadmin/production/filterDropdownDashboard.phtml',
+            'kemper-admin/report/report-center' => __DIR__ . '/../view/kemper-admin/report/reports-list.phtml',
+//            'kemper-admin/report/recent-reports' => __DIR__ . '/../view/kemperadmin/report/recent-reports.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
+            __DIR__ . '/../view/kemper-admin',
         ],
     ],
 ];

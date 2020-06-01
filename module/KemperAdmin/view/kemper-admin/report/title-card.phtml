@@ -1,0 +1,22 @@
+<?php
+/**
+ * @var ViewModel $helper
+ * @var PhpRenderer $this
+ */
+
+use Zend\View\Helper\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
+
+/**
+ * @var array $reportConfig
+ */
+?>
+<li>
+
+    <div class="card shadow">
+            <a href="<?= $this->url('kemperadmin:reports' , ['report-title' => $reportConfig['report-title']])?>">
+        <?= $reportConfig['report-name'] ?>
+        <?= $reportConfig['description'] ?>
+        </a>
+    </div>
+</li>

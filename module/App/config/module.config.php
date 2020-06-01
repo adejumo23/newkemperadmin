@@ -14,11 +14,15 @@ use App\Di\AbstractFactory;
 use App\Di\ControllerManagerFactory;
 use App\Di\InjectorFactory;
 use App\Db\ConnectionFactory;
+use App\Di\View\FormFactory;
+use App\Form\Element\AbstractElement;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Service\SessionConfigFactory;
 use Zend\Session\Service\StorageFactory;
+
+$GLOBALS['print_debug_message'] = true;
 
 return [
     'service_manager' => [
@@ -36,6 +40,7 @@ return [
         ],
         'abstract_factories' => [
             AbstractFactory::class,
+            FormFactory::class,
         ],
         'aliases' => [
             'auth' => AuthenticationService::class,

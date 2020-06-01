@@ -1,0 +1,7 @@
+<ul>
+    <?php
+    foreach ($recentReports as $report) {
+        $this->render((new \Zend\View\Model\ViewModel(['report' => $report]))->setTemplate('report-card'));
+    }
+    ?>
+</ul>

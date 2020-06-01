@@ -1,0 +1,34 @@
+<?php
+/**
+ * @var ViewModel $helper
+ * @var PhpRenderer $this
+ */
+
+use Zend\View\Helper\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
+
+/**
+ * @var array $reportConfigs
+ * @var string $classification
+ */
+
+$pageTitle = ucfirst($classification) . ' Reports';
+$this->headTitle($pageTitle);
+
+?>
+<h2>
+    <?= $pageTitle ?>
+</h2>
+<div class="reportslist">
+    <ul>
+    <?php
+
+    foreach ($reportConfigs as $reportConfig) {
+        $reportCard = (new \Zend\View\Model\ViewModel([
+            'reportConfig' => $reportConfig
+        ]))->setTemplate('kemper-admin/report/title-card');
+        echo $this->render($reportCard);
+    }
+    ?>
+    </ul>
+</div>

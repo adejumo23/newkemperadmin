@@ -12,6 +12,7 @@ use Exception;
 use KemperAdmin\Model\Service\ConservationService;
 use KemperAdmin\Model\Service\DisposerService;
 use KemperAdmin\Model\Service\DispositionService;
+use KemperAdmin\Model\Service\ProductStatsService;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
@@ -37,17 +38,18 @@ class ConservationController extends AbstractAppController
      * @return ViewModel
      * @throws Exception
      */
+    /**
+     * @var ProductStatsService
+     * @Inject(name="KemperAdmin\Model\Service\ProductStatsService")
+     */
+    protected $productStatsService;
 
     public function indexAction()
     {
         $identity = $this->getIdentity();
         $firstName = $identity->getFirstname();
         $lastName = $identity->getLastname();
-        $privilege_conservation_dashboard_view = $identity->getPriv('conservation_dashboard_view');
-        $privilege_conservation_listings = $identity->getPriv('conservation_listings');
-        $privilege_production_dashboard_view = $identity->getPriv('production_dashboard_view');
-        $privilege_production_reports = $identity->getPriv('production_reports');
-        $privilege_conservation_reports = $identity->getPriv('conservation_reports');
+
         $startDate = $this->request->getQuery('startdate');
         $endDate = $this->request->getQuery('enddate');
 
@@ -60,7 +62,7 @@ class ConservationController extends AbstractAppController
         }
         $disposerDataUrl = $this->url()->fromRoute('kemperadmin:conservation:disposer');
         $dispositionDataUrl = $this->url()->fromRoute('kemperadmin:conservation:disposition');
-        $yearlyDataUrl = $this->url()->fromRoute('kemperadmin:conservation:yearly');
+        $productStatsDataUrl = $this->url()->fromRoute('kemperadmin:conservation:productstats');
         /*
          * Return any view from any action
          */
@@ -68,21 +70,9 @@ class ConservationController extends AbstractAppController
             'disposerArray' => $disposerArray,
             'disposerDataUrl' => $disposerDataUrl,  //Default DisposerDataUrl
             'dispositionDataUrl'=> $dispositionDataUrl,
-            'yearlyDataUrl'=> $yearlyDataUrl
+            'productStatsDataUrl'=> $productStatsDataUrl
             ]);
-        $this->layout()->firstName =  $firstName;
-        $this->layout()->privilege = [
-            'privilege_conservation_dashboard_view'=> $privilege_conservation_dashboard_view,
-            'privilege_conservation_listings'=> $privilege_conservation_listings,
-            'privilege_production_dashboard_view'=> $privilege_production_dashboard_view,
-            'privilege_production_reports'=> $privilege_production_reports,
-            'privilege_conservation_reports'=> $privilege_conservation_reports,
-        ];
-        $this->layout()->privilege_conservation_dashboard_view =  $privilege_conservation_dashboard_view;
-        $this->layout()->privilege_conservation_listings =  $privilege_conservation_listings;
-        $this->layout()->privilege_production_dashboard_view =  $privilege_production_dashboard_view;
-        $this->layout()->privilege_production_reports =  $privilege_production_reports;
-        $this->layout()->privilege_conservation_reports =  $privilege_conservation_reports;
+
         $viewModel->setTemplate('kemper-admin/conservation/chartdatafilterdropdown');
         $filterModel = new ViewModel(['filterDataDatesUrl' => 'kemperadmin:conservation']);
         $filterModel->setTemplate('kemper-admin/conservation/filterdropdowndashboard');
@@ -117,10 +107,10 @@ class ConservationController extends AbstractAppController
         echo json_encode($data);
         exit();
     }
-    public function yearlyDataAction()
+    public function productStatsDataAction()
     {
-        $disposerService = $this->disposerService;
-        $data = $disposerService->getDisposerPremiumPerYear();
+        $productStatsService = $this->productStatsService;
+        $data = $productStatsService->getProductStatsData();
         $data['status'] = count($data) > 0;
         echo json_encode($data);
         exit();
@@ -151,6 +141,24 @@ class ConservationController extends AbstractAppController
     public function setDispositionService($dispositionService)
     {
         $this->dispositionService = $dispositionService;
+        return $this;
+    }
+
+    /**
+     * @return ProductStatsService
+     */
+    public function getProductStatsService()
+    {
+        return $this->productStatsService;
+    }
+
+    /**
+     * @param ProductStatsService $productStatsService
+     * @return ConservationController
+     */
+    public function setProductStatsService($productStatsService)
+    {
+        $this->productStatsService = $productStatsService;
         return $this;
     }
 

@@ -26,7 +26,8 @@
     "zendframework/zend-servicemanager-di": "^1.2.1",
     "guzzlehttp/guzzle": "6.5.2",
     "zendframework/zend-feed": "2.13.x-dev",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-mysqli": "*"
   },
   "autoload": {
     "psr-4": {

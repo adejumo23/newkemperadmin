@@ -1,0 +1,22 @@
+<?php
+/**
+ * @var ViewModelHelper $helper
+ */
+/**
+ * @var PhpRenderer $this
+ * @var ViewModel $reportTemplate
+ * @var string $classification
+ */
+
+$this->headTitle("Kemper Health - Reports");
+$this->inlineScript()->appendFile($this->basePath("js/kemperadmin/reports.js"));
+
+
+use Zend\View\Helper\ViewModel as ViewModelHelper;
+use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer; ?>
+<h2 class="font-weight-bold mt-lg-5 mb-5 pb-4"><strong><?=ucfirst($classification)?> Report</strong></h2>
+<?php
+echo $this->render($reportTemplate);
+?>
+

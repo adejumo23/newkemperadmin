@@ -1,0 +1,35 @@
+.slide-out-right {
+    z-index: 999;
+}
+#right-side-nav{
+    padding-top: 80px;
+    color: #212529;
+}
+.navbar.second-navbar {
+    margin-top: 60px;
+    background: #f8f9fa  !important;
+    transition: all .5s ease-in-out;
+}
+
+.navbar.second-navbar.top-nav-collapse {
+    margin-top: 45px;
+}
+
+.navbar {
+    z-index: 1040;
+}
+.side-nav {
+    /*margin-top: 45px !important;*/
+}
+
+.double-nav .breadcrumb-dn p {
+    color: #fff;
+}
+
+/*
+@media (min-width: 1200px){
+    .fixed-sn main {
+        margin-left: 20% !important;
+        margin-right: 20% !important;
+    }
+}*/

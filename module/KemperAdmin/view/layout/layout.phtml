@@ -7,11 +7,17 @@
 /**
  * @var string $firstName
  * @var string $lastName
+ * @var \App\Auth\Identity $identity
  */
 
+use KemperAdmin\Helper\MenuConstantsInterface as MCI;
 use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer; ?>
-<?= $this->doctype() ?>
+use Zend\View\Renderer\PhpRenderer;
+
+$identity = $this->getEngine()->identity();
+
+?>
+<?= $this->doctype();?>
 
 <html lang="en">
 <head>
@@ -26,39 +32,34 @@ use Zend\View\Renderer\PhpRenderer; ?>
     <!-- Le styles -->
     <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/kemperIcon.ico'])
         ->prependStylesheet($this->basePath('css/style.css'))
-        ->prependStylesheet("../../css/mdb.min.css")
-            ->prependStylesheet("../../css/bootstrap.min.css")
-        ->prependStylesheet("../../css/font/all.css");
+        ->prependStylesheet($this->basePath("css/mdb.min.css"))
+        ->prependStylesheet($this->basePath("css/bootstrap.min.css"))
+        ->prependStylesheet($this->basePath("css/custom-kemper.css"))
+        ->prependStylesheet($this->basePath("css/font/all.css"));
     ?>
 
     <!-- Scripts -->
     <?php
-    $this->inlineScript()->appendFile("../../js/kemperadmin/conservation-dashboard.js");
-    $this->inlineScript()->appendFile("../../js/kemperadmin/filter-dropdown-item.js");
-    $this->inlineScript()->prependFile("../../js/vendor/jquery-easing/jquery.easing.min.js");
-    $this->inlineScript()->prependFile("../../js/vendor/bootstrap/js/bootstrap.bundle.min.js");
-    $this->inlineScript()->prependFile("../../js/mdb.min.js");
-    $this->inlineScript()->prependFile("../../js/bootstrap.min.js");
-    $this->inlineScript()->prependFile("../../js/popper.min.js");
-    $this->inlineScript()->prependFile("../../js/jquery-3.4.1.min.js");
-
+    $this->inlineScript()->prependFile($this->basePath("js/vendor/jquery-easing/jquery.easing.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/vendor/bootstrap/js/bootstrap.bundle.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/mdb.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/bootstrap.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/popper.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/jquery-3.4.1.min.js"));
     ?>
 </head>
 <body class="fixed-sn white-skin">
 <!-- Main Navigation -->
-<header>
-
-    <!-- Sidebar navigation -->
+<header class="layoutnavigation">
+    <!-- 1st Sidebar navigation -->
     <div id="slide-out" class="side-nav sn-bg-4 fixed" style="width: 240px; transform: translateX(-1000px);">
         <ul class="custom-scrollbar">
-
             <!-- Logo -->
             <li class="logo-sn waves-effect py-3 KemperImageLi">
                 <div class="text-center KemperImage">
-                    <a href="#" class="pl-0"><img src="../../img/KemperHealth_Logo_Horz_Color_Web_FINAL-4.png"></a>
+                    <a href="<?=$this->url('kemperadmin:home')?>" class="pl-0"><img src="<?=$this->basePath("img/KemperHealth_Logo_Horz_Color_Web_FINAL-4.png")?>"></a>
                 </div>
             </li>
-
             <!-- Search Form -->
             <li>
                 <form class="search-form" role="search">
@@ -67,27 +68,26 @@ use Zend\View\Renderer\PhpRenderer; ?>
                     </div>
                 </form>
             </li>
-
             <!-- Side navigation links -->
             <li>
                 <ul class="collapsible collapsible-accordion">
 
                     <li>
                         <a class="collapsible-header waves-effect arrow-r">
-                            <i class="w-fa fas fa-tachometer-alt"></i>Dashboards<i class="fas fa-angle-down rotate-icon"></i>
+                            <i class="w-fa fas fa-tachometer-alt"></i>Conservation<i class="fas fa-angle-down rotate-icon"></i>
                         </a>
                         <div class="collapsible-body">
                             <ul>
-                                <?php if($this->privilege_conservation_dashboard_view == 1):?>
+                                <?php if($identity->getPriv(MCI::CONSERVATION_DASHBOARD_VIEW)):?>
                                 <li>
-                                    <a href="conservation" class="waves-effect">Conservation</a>
+                                    <a href="<?=$this->url('kemperadmin:conservation')?>" class="waves-effect">Dashboard</a>
                                 </li>
                                 <?php
                                     endif;
                                 ?>
-                                <?php if($this->privilege_production_dashboard_view == 1):?>
+                                <?php if($identity->getPriv(MCI::CONSERVATION_REPORTS)):?>
                                 <li>
-                                    <a href="production" class="waves-effect">Production</a>
+                                    <a href="<?=$this->url('kemperadmin:report-center', ['classification' => 'conservation'])?>" class="waves-effect">Reports</a>
                                 </li>
                                 <?php
                                     endif;
@@ -95,52 +95,30 @@ use Zend\View\Renderer\PhpRenderer; ?>
                             </ul>
                         </div>
                     </li>
-<!--                    <li>
+
+                    <li>
                         <a class="collapsible-header waves-effect arrow-r">
-                            <i class="w-fa fas fa-image"></i>Pages<i class="fas fa-angle-down rotate-icon"></i>
+                            <i class="w-fa fas fa-tachometer-alt"></i>Production<i class="fas fa-angle-down rotate-icon"></i>
                         </a>
                         <div class="collapsible-body">
                             <ul>
+                                <?php if($identity->getPriv(MCI::PRODUCTION_DASHBOARD_VIEW)):?>
                                 <li>
-                                    <a href="../pages/login.html" class="waves-effect">Login</a>
+                                    <a href="<?=$this->url('kemperadmin:production')?>" class="waves-effect">Dashboard</a>
                                 </li>
+                                <?php
+                                    endif;
+                                ?>
+                                <?php if($identity->getPriv(MCI::PRODUCTION_REPORTS)):?>
                                 <li>
-                                    <a href="../pages/register.html" class="waves-effect">Register</a>
+                                    <a href="<?=$this->url('kemperadmin:report-center', ['classification' => 'production'])?>" class="waves-effect">Reports</a>
                                 </li>
-                                <li>
-                                    <a href="../pages/pricing.html" class="waves-effect">Pricing</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/about.html" class="waves-effect">About us</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/single.html" class="waves-effect">Single post</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/post.html" class="waves-effect">Post listing</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/landing.html" class="waves-effect">Landing page</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/customers.html" class="waves-effect">Customers</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/invoice.html" class="waves-effect">Invoice</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/page-creator.html" class="waves-effect">Page Creator</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/support.html" class="waves-effect">Support</a>
-                                </li>
-                                <li>
-                                    <a href="../pages/chat.html" class="waves-effect">Chat</a>
-                                </li>
+                                <?php
+                                    endif;
+                                ?>
                             </ul>
                         </div>
                     </li>
--->
 
                     <!-- Simple link -->
                     <li>
@@ -160,16 +138,14 @@ use Zend\View\Renderer\PhpRenderer; ?>
         </ul>
         <div class="sidenav-bg mask-strong"></div>
     </div>
-    <!-- Sidebar navigation -->
+<!--    2nd sidebar navigation-->
 
-    <!-- Navbar -->
-    <nav class="navbar fixed-top navbar-expand-lg scrolling-navbar double-nav">
+    <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
 
         <!-- SideNav slide-out button -->
         <div class="float-left">
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="fas fa-bars"></i></a>
         </div>
-
         <!-- Breadcrumb -->
         <div class="breadcrumb-dn mr-auto">
             <p></p>
@@ -224,10 +200,9 @@ use Zend\View\Renderer\PhpRenderer; ?>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="login/logout">Log Out</a>
-                        <a class="dropdown-item" href="#"><?php echo $this->firstName;?></a>
+                        <a class="dropdown-item" href="#"><?php echo $identity->getFirstname();?></a>
                     </div>
                 </li>
-
             </ul>
             <!-- Navbar links -->
 
@@ -236,31 +211,25 @@ use Zend\View\Renderer\PhpRenderer; ?>
     </nav>
     <!-- Navbar -->
 
+
 </header>
 <!-- Main Navigation -->
-
-
 <!-- Main layout -->
 <main>
-
     <div class="container-fluid">
     <?= $this->content;?>
-
     </div>
-
 </main>
 <!-- Main layout -->
 
 <!-- Footer -->
 <footer class="page-footer pt-0 mt-5 rgba-stylish-light">
-
     <!-- Copyright -->
     <div class="footer-copyright py-3 text-center">
         <div class="container-fluid">
             © 2020 Copyright: <a href="https://kemper.com/" target="_blank">Kemper.com</a>
         </div>
     </div>
-
 </footer>
 <?= $this->inlineScript() ?>
 

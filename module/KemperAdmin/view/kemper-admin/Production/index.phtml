@@ -1,0 +1,151 @@
+<?php
+/**
+ * @var ViewModel $helper
+ */
+/**
+ * @var PhpRenderer $this
+ * @var float $net
+ * @var float $newSales
+ * @var string $refunds
+ * @var AbstractTemplate $hierarchy
+ * @var string $filterdropdowndashboard
+ * @var string $hierarchyListTemplate
+ *
+ */
+
+$this->headTitle("Kemper Health - Production");
+$this->inlineScript()->appendFile($this->basePath("js/kemperadmin/hierarchy-sidenav.js"));
+
+
+use App\Template\AbstractTemplate;
+use Zend\View\Helper\ViewModel;
+use Zend\View\Renderer\PhpRenderer; ?>
+<div id="right-side-nav" class="slide-out-right side-nav sn-bg-4" style="margin-top: 67px !important">
+    <ul class="custom-scrollbar-right">
+        <li>
+            <?=$hierarchy->getHtml();?>
+
+        </li>
+    </ul>
+    <div class="sidenav-bg mask-strong"></div>
+</div>
+<a data-activates="right-side-nav" class="hierarchy-collapse float-right nav-link waves-effect">
+    <span class="clearfix d-none d-sm-inline-block">Hierarchy</span>
+    <i class="fas fa-sitemap"></i>
+</a>
+<section class="mt-md-4 pt-md-2 mb-5">
+    <!-- First row -->
+    <div class="row">
+
+        <!-- First column -->
+        <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+
+            <!-- Card -->
+            <div class="card card-cascade cascading-admin-card">
+
+                <!-- Card Data -->
+                <div class="admin-up">
+                    <i class="far fa-money-bill-alt primary-color mr-3 z-depth-2"></i>
+                    <div class="data">
+                        <p class="text-uppercase">Total Sales</p>
+                        <h4 class="font-weight-bold ">$<?= number_format($newSales) ?></h4>
+                    </div>
+                </div>
+
+                <!-- Card content -->
+                <div class="card-body card-body-cascade">
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 25%" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-text">Better than last week (25%)</p>
+                </div>
+
+            </div>
+            <!-- Card -->
+
+        </div>
+        <!-- First column -->
+
+        <!-- Second column -->
+        <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+
+            <!-- Card -->
+            <div class="card card-cascade cascading-admin-card">
+
+                <!-- Card Data -->
+                <div class="admin-up">
+                    <i class="far fa-money-bill-alt warning-color mr-3 z-depth-2"></i>
+                    <div class="data">
+                        <p class="text-uppercase">Total Refunds</p>
+                        <h4 class="font-weight-bold ">$<?= number_format($refunds) ?></h4>
+                    </div>
+                </div>
+
+                <!-- Card content -->
+                <div class="card-body card-body-cascade">
+                    <div class="progress mb-3">
+                        <div class="progress-bar red accent-2" role="progressbar" style="width: 25%" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-text">Worse than last week (25%)</p>
+                </div>
+
+            </div>
+            <!-- Card -->
+
+        </div>
+        <!-- Second column -->
+
+        <!-- Third column -->
+        <div class="col-xl-3 col-md-6 mb-md-0 mb-4">
+
+            <!-- Card -->
+            <div class="card card-cascade cascading-admin-card">
+
+                <!-- Card Data -->
+                <div class="admin-up">
+                    <i class="fas fa-chart-pie light-blue lighten-1 mr-3 z-depth-2"></i>
+                    <div class="data">
+                        <p class="text-uppercase">Total Net</p>
+                        <h4 class="font-weight-bold ">$<?= number_format($net) ?></h4>
+                    </div>
+                </div>
+
+                <!-- Card content -->
+                <div class="card-body card-body-cascade">
+                    <div class="progress mb-3">
+                        <div class="progress-bar red accent-2" role="progressbar"
+                             style="width:  <?= $disposedOpenPercent ?>%" aria-valuenow="75"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-text">Worse than last week (75%)</p>
+                </div>
+
+            </div>
+            <!-- Card -->
+
+        </div>
+        <!-- Third column -->
+
+    </div>
+    <!-- First row -->
+
+</section>
+<!-- Section: Analytical panel -->
+
+
+<?php
+$this->inlineScript()->appendFile($this->basePath("js/kemperadmin/production-dashboard.js"));
+/*return;
+include_once __DIR__.'/KemperDashboardData.php';
+$kemperData = new KemperDashboardData($filterData);
+$data = $kemperData->getDetails();
+$newSales = number_format($data[0]['New sales']);
+$refunds = number_format($data[0]['refunds']);
+$net = number_format($data[0]['Net']);*/
+
+?>
+
+
+

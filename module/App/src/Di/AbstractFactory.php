@@ -19,7 +19,14 @@ class AbstractFactory implements AbstractFactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new $requestedName();
+        $classObject =  new $requestedName();
+        if ($classObject instanceof InitializableInterface) {
+            $classObject->init();
+        }
+        if ($classObject instanceof ContainerAwareInterface) {
+            $classObject->setContainer($container);
+        }
+        return $classObject;
     }
 
     /**

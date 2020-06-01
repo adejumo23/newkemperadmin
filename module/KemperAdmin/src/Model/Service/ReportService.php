@@ -7,63 +7,50 @@
 namespace KemperAdmin\Model\Service;
 
 
-class ReportService
+use App\Di\InjectableInterface;
+use KemperAdmin\Model\Entity\ReportJob;
+use KemperAdmin\Model\Repository\ReportJobRepo;
+use StdClass;
+
+class ReportService implements InjectableInterface
 {
-    /**
-     * @var \StdClass
-     * @Inject(name="\StdClass")
-     */
-    protected $repo1;
 
     /**
-     * @var \StdClass
-     * @Inject(name="\StdClass")
+     * @var ReportJobRepo
+     * @Inject(repo="KemperAdmin\Model\Entity\ReportJob")
      */
-    protected $repo2;
+    protected $reportJobRepo;
 
-    /**
-     * @var string
-     */
-    protected $repo3;
-
-
-    /**
-     * @param $username
-     * @return array
-     */
-    public function calcReportDataForUser($username)
+    public function getReportStatus($transactionId)
     {
-        print_r($username);
+    }
+
+    public function getRecentReports()
+    {
         return [];
     }
 
-    /**
-     * @param \StdClass $repo1
-     * @return ReportService
-     */
-    public function setRepo1($repo1)
+    public function getSavedReports()
     {
-        $this->repo1 = $repo1;
-        return $this;
+
     }
 
     /**
-     * @param \StdClass $repo2
-     * @return ReportService
+     * @param ReportJob $reportJob
      */
-    public function setRepo2($repo2)
+    public function queueReport( $reportJob)
     {
-        $this->repo2 = $repo2;
-        return $this;
+        return $this->reportJobRepo->save($reportJob);
     }
 
     /**
-     * @param \StdClass $repo3
+     * @param ReportJobRepo $reportJobRepo
      * @return ReportService
      */
-    public function setRepo3($repo3)
+    public function setReportJobRepo($reportJobRepo)
     {
-        $this->repo3 = $repo3;
+        $this->reportJobRepo = $reportJobRepo;
         return $this;
     }
+
 }

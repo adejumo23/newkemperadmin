@@ -99,7 +99,9 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
     protected function getIdentity()
     {
         if (!$this->identity) {
-            return $this->plugin('identity');
+            /** @var \Zend\Mvc\Plugin\Identity\Identity $identityPlugin */
+            $identityPlugin = $this->plugin('identity');
+            return $identityPlugin->getAuthenticationService()->getIdentity();
         }
         return $this->identity;
     }
@@ -135,5 +137,14 @@ class AbstractAppController extends AbstractActionController implements Di\Injec
         return $this;
     }
 
+    /**
+     * @param string $name
+     * @param null $default
+     * @return mixed
+     */
+    public function getParam($name, $default = null)
+    {
+        return $this->event->getRouteMatch()->getParam($name, $default);
+    }
 
 }
