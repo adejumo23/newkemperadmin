@@ -38,7 +38,7 @@ abstract class AbstractForm implements ContainerAwareInterface, InjectableInterf
     /**
      * @var array
      */
-    protected $filters;
+    protected $filters = [];
 
 
     /**

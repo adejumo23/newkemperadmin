@@ -1,0 +1,63 @@
+<?php
+/**
+ * @var ViewModel $helper
+ * @var PhpRenderer $this
+ */
+
+use App\Form\AbstractForm;
+use Zend\View\Helper\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
+
+/**
+ * @var AbstractForm $form
+ */
+
+?>
+    <!-- Material form register -->
+    <div class="card">
+
+        <h5 class="card-header info-color white-text text-center py-4">
+            <strong>Edit User</strong>
+        </h5>
+
+        <!--Card content-->
+        <div class="card-body px-lg-5 pt-0">
+
+            <!-- Form -->
+            <form class="text-center" style="color: #757575;" action="" method="post">
+                <?php
+                echo $form->render();
+                ?>
+<!--                 Sign up button -->
+                <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Save Changes</button>
+
+                <!-- Social register -->
+                <p>or sign up with:</p>
+
+                <a type="button" class="btn-floating btn-fb btn-sm">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a type="button" class="btn-floating btn-tw btn-sm">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a type="button" class="btn-floating btn-li btn-sm">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a type="button" class="btn-floating btn-git btn-sm">
+                    <i class="fab fa-github"></i>
+                </a>
+
+                <hr>
+
+                <!-- Terms of service -->
+                <p>By clicking
+                    <em>Sign up</em> you agree to our
+                    <a href="" target="_blank">terms of service</a>
+
+            </form>
+            <!-- Form -->
+
+        </div>
+
+    </div>
+    <!-- Material form register -->

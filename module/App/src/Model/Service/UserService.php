@@ -10,6 +10,8 @@ use App\Auth\Storage;
 use App\Db\Connection;
 use App\Di\ContainerAwareInterface;
 use App\Di\InjectableInterface;
+use App\Model\Entity\User;
+use App\Model\Repository\ProfileRepository;
 use Interop\Container\ContainerInterface;
 use App\Model\Repository\UserRepository;
 use Zend\Authentication\Result;
@@ -39,7 +41,7 @@ class UserService implements InjectableInterface, ContainerAwareInterface
 
     /**
      * @var UserRepository
-     * @Inject(name="App\Model\Repository\UserRepository")
+     * @Inject(repo="App\Model\Entity\User")
      */
     protected $userRepo;
 
@@ -47,6 +49,11 @@ class UserService implements InjectableInterface, ContainerAwareInterface
      * @var ContainerInterface
      */
     protected $container;
+    /**
+     * @var ProfileRepository
+     * @Inject(repo="App\Model\Entity\UserProfile")
+     */
+    protected $profileRepo;
 
     /**
      * @param $username
@@ -93,6 +100,7 @@ class UserService implements InjectableInterface, ContainerAwareInterface
         $data = $authAdapter->getResultRowObject(null, $columnsToOmit);
         $identity = $this->createIdentity($data);
         $this->setPrivileges($identity);
+        $this->setProfile($identity);
 
 //        $sessionManager = new SessionManager();
 //
@@ -120,7 +128,23 @@ class UserService implements InjectableInterface, ContainerAwareInterface
         $identity->setUsername($data->username);
         $identity->setFirstname($data->firstname);
         $identity->setLastname($data->lastname);
+        $identity->setProfileId($data->profile_id);
+
         return $identity;
+    }
+
+    public function findUsers()
+    {
+        return $this->userRepo->findBy();
+    }
+
+    /**
+     * @param $username
+     * @return User|array
+     */
+    public function findUserByUsername($username)
+    {
+        return $this->userRepo->findOneBy(['username' => $username]);
     }
 
     /**
@@ -170,9 +194,19 @@ class UserService implements InjectableInterface, ContainerAwareInterface
         $privs = $this->userRepo->findUserPrivsByUsername($identity->getUsername());
         $identity->setPrivs($privs);
     }
+    /**
+     * @param Identity $identity
+     */
+    private function setProfile(&$identity)
+    {
+        if ($identity->getProfileId()) {
+            $profile = $this->profileRepo->findOneBy(['id' => $identity->getProfileId()]);
+            $identity->setProfile($profile);
+        }
+    }
 
     /**
-     * @param \UserRepository $userRepo
+     * @param UserRepository $userRepo
      * @return UserService
      */
     public function setUserRepo($userRepo)
@@ -180,4 +214,29 @@ class UserService implements InjectableInterface, ContainerAwareInterface
         $this->userRepo = $userRepo;
         return $this;
     }
+
+    /**
+     * @param ProfileRepository $profileRepo
+     * @return UserService
+     */
+    public function setProfileRepo($profileRepo)
+    {
+        $this->profileRepo = $profileRepo;
+        return $this;
+    }
+
+    /**
+     * @param string $username
+     * @param array $postData
+     */
+    public function updateUser($username, $postData)
+    {
+        $postData['username'] = $username;
+//        $user = $this->findUserByUsername($username);
+//        $user->setFirstname($postData['firstname']);
+//        $user->setLastname($postData['lastname']);
+        $this->userRepo->update($postData);
+
+    }
+
 }

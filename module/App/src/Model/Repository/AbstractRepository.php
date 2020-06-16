@@ -35,7 +35,24 @@ class AbstractRepository implements InjectableInterface
      */
     protected $templateMap = [];
 
-
+    public function hydrateEntity($object, $data)
+    {
+        $reflectionObject = New \ReflectionClass($object);
+        $object->setMetadata();
+        $fields = $object->getFields();
+        foreach ($data as $col => $value) {
+            if (isset($fields[$col])) {
+                $property = $fields[$col]['propertyName'];
+            }else{
+                continue;
+            }
+            $setterName = 'set' . $property;
+            if ($reflectionObject->hasMethod($setterName)) {
+                $object->{$setterName}($value);
+            }
+        }
+        return $object;
+    }
 
     /**
      * @param $sql
@@ -66,13 +83,15 @@ class AbstractRepository implements InjectableInterface
         return $this->insert($entity);
     }
 
+
     /**
      * @param array|null $criteria
+     * @param array|null $orderBy
      * @param int|null $limit
      * @param int $offset
      * @return array
      */
-    public function findBy(array $criteria = null, int $limit = null, int $offset = 0)
+    public function findBy(array $criteria = null, array $orderBy = null, int $limit = null, int $offset = 0)
     {
         $return = [];
         $selects = $this->entity->getFields();
@@ -87,20 +106,24 @@ SQL;
       SELECT {$selectString} FROM {$this->entity->getTable()} 
 SQL;
         }
-
-        if ($limit) {
+        if ($orderBy) {
             $query .= <<<SQL
-            LIMIT {$offset}, {$limit}
+ ORDER BY {$this->getOrderByString($orderBy)} 
 SQL;
         }
-        $result = mysqli_query($this->connection, $query);
-        if (mysqli_affected_rows($this->connection) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $return[] = $row;
-            }
-        } else {
-            error_log(mysqli_error($this->connection));
+
+//        if ($limit) {
+//            $query .= <<<SQL
+//            LIMIT {$offset}, {$limit}
+//SQL;
+//        }
+        $result = $this->connection->executeQuery($query);
+        foreach ($result as $row){
+            $entityClassName = $this->getEntityClassName();
+            $object = $this->hydrateEntity((new $entityClassName()), $row);
+            $return[] = $object;
         }
+
         return $return;
     }
 
@@ -110,7 +133,7 @@ SQL;
      */
     public function findOneBy(array $criteria)
     {
-        $return = $this->findBy($criteria, 1);
+        $return = $this->findBy($criteria, null,1);
         return reset($return);
     }
 
@@ -152,14 +175,8 @@ SQL;
         $query = <<<SQL
       UPDATE {$this->entity->getTable()} SET {$updateString} WHERE {$whereString} 
 SQL;
-        $result = mysqli_query($this->connection, $query);
-
-        if (!$result) {
-            $err = mysqli_error($this->connection);
-            error_log($err);
-            return 0;
-        }
-        return $result;
+        $return = $this->executeQuery($query);
+        return $return;
     }
 
     /**
@@ -258,6 +275,14 @@ SQL;
         return rtrim($whereString, $separator);
     }
 
+    private function getOrderByString(array $orderBy, string $seperator = ', ')
+    {
+        $orderByString = "";
+        foreach ($orderBy as $col => $order) {
+            $orderByString .= $col . " " . $order . $seperator;
+        }
+        return rtrim($orderByString, $seperator);
+    }
     /**
      * @param array $updateSet
      * @return string
@@ -282,6 +307,22 @@ SQL;
         }
         return $criteria;
     }
+    /**
+     * @param $dataSet
+     * @return bool
+     */
+    private function isIdentifierPopulated(&$dataSet)
+    {
+        $fields = $this->entity->getFields();
+        foreach ($fields as $fieldname => $metadata) {
+            if ($metadata['identifier']) {
+                if (!empty($dataSet[$fieldname])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * @param Connection $connection
@@ -302,4 +343,17 @@ SQL;
         $this->entity = $entity;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getEntityClassName()
+    {
+        if (!$this->entityClassName) {
+            $this->entityClassName = get_class($this->entity);
+        }
+        return $this->entityClassName;
+    }
+
+
 }

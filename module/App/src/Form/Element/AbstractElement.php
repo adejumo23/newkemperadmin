@@ -226,6 +226,15 @@ class AbstractElement
     /**
      * @return string
      */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+
+    /**
+     * @return string
+     */
     public function getText()
     {
         return $this->text;
@@ -264,7 +273,7 @@ class AbstractElement
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->attributes['value'];
     }
 
     /**
@@ -273,7 +282,7 @@ class AbstractElement
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        $this->attributes['value'] = $value;
         return $this;
     }
 

@@ -8,6 +8,7 @@ return [
             'report-name' => "Snapshot Report",
             'description' => "Overall office production",
             'classification' => 'production',
+            'permissions' => ['production'],
             'defaults' => [],
             'settings' => [
                 'filters' => [
@@ -24,10 +25,11 @@ return [
                 ],
             ],
         ],
-        'production-report' => [
+        'production' => [
             'report-name' => "Production Report",
             'description' => "YTD Per Agency and state",
             'classification' => 'production',
+            'permissions' => ['production'],
             'settings' => [
                 'filters' => [
                     [
@@ -38,10 +40,11 @@ return [
             'defaults' => [],
 
         ],
-        'conservation-report' => [
+        'conservation' => [
             'report-name' => "Conservation Report",
             'description' => "todo",
             'classification' => 'conservation',
+            'permissions' => ['conservation'],
             'settings' => [
                 'filters' => [
                     [

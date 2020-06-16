@@ -6,6 +6,8 @@ namespace KemperAdmin\Model\Service;
 
 use App\Di\InjectableInterface;
 use App\Helper\View\StringHelper;
+use App\Model\Entity\User;
+use App\Model\Service\UserAccessService;
 use KemperAdmin\Model\Repository\DispositionRepository;
 use KemperAdmin\Model\Repository\ProductionRepository;
 
@@ -25,12 +27,20 @@ class ProductionService implements InjectableInterface
      * @Inject(name="KemperAdmin\Model\Repository\ProductionRepository")
      */
     protected $productionRepo;
-    protected $agent;
+    /**
+     * @var \App\Auth\Identity
+     */
+    protected $identity;
+    /**
+     * @var UserAccessService
+     * @Inject(name="App\Model\Service\UserAccessService")
+     */
+    protected $userAccessService;
 
-    public function getProductionData($startDate, $endDate)
+    public function getProductionData($startDate, $endDate,$agent)
     {
 //        return [];
-        $this->init($startDate, $endDate);
+        $this->init($startDate, $endDate,$agent);
         $newSales = $this->getNewSales();
         $refunds = $this->getRefunds();
         $net = $this->getNet();
@@ -43,14 +53,13 @@ class ProductionService implements InjectableInterface
             'newSales' => $newSales,
             'refunds' => $refunds,
             'net' => $net,
-            'chartPremium'=> $chartPremium,
-            'chartSales'=> $chartSales,
-            'chartRefunds'=> $chartRefunds,
-//            'rvps'=> $rvps,
+            'chart' =>['chartPremium' => $chartPremium,
+                        'chartSales'=> $chartSales,
+                        'chartRefunds'=>   $chartRefunds],
             'managers'=> $managers
         ];
     }
-    public function init($startDate, $endDate)
+    public function init($startDate, $endDate,$agent)
     {
         $filterClause = [];
         if ($startDate) {
@@ -59,8 +68,8 @@ class ProductionService implements InjectableInterface
         if ($endDate) {
             $filterClause['endingDate'] = $endDate;
         }
-        if ($this->agent) {
-            $filterClause['agent'] = $this->agent;
+        if ($agent) {
+            $filterClause['agent'] = $agent;
         }
         $this->productionRepo->init($filterClause);
         $this->initNewSales();
@@ -152,9 +161,9 @@ class ProductionService implements InjectableInterface
     {
         $resultSalesChartData = $this->productionRepo->getSalesChartData();
         $labels = array_column($resultSalesChartData, 'MONTH');
-        $refund = array_column($resultSalesChartData, 'refunds');
+        $sales = array_column($resultSalesChartData, 'sales');
         $response = ['labels'=> $labels,
-            'refund'=> $refund
+            'sales'=> $sales
         ];
         $this->setChartSales($response);
     }
@@ -243,6 +252,19 @@ class ProductionService implements InjectableInterface
         return $managerData;
     }
 
+    public function getAllowedUsersForUser($userId)
+    {
+        $allowedUsers = $this->userAccessService->getAllowedUsersForUser($userId);
+
+        foreach ((array)$allowedUsers as $user) {
+            $users[] = [
+                'name' => $user['firstname'] . " " . $user['lastname'],
+                'report' => $user['report'],
+            ];
+        }
+        return $users;
+    }
+
     /**
      * @return mixed
      */
@@ -287,8 +309,36 @@ class ProductionService implements InjectableInterface
     {
         $result = [];
         foreach ((array)$data as $record) {
-            $result[$record['report']] =  StringHelper::titleCase($record['Name']);
+            $result[$record['report']] =  StringHelper::titleCase($record['name']);
         }
         return $result;
+    }
+
+    /**
+     * @param \App\Auth\Identity $identity
+     * @return $this
+     */
+    public function setIdentity(\App\Auth\Identity $identity)
+    {
+        $this->identity = $identity;
+        return $this;
+    }
+
+    /**
+     * @return \App\Auth\Identity
+     */
+    public function getIdentity()
+    {
+        return $this->identity;
+    }
+
+    /**
+     * @param UserAccessService $userAccessService
+     * @return ProductionService
+     */
+    public function setUserAccessService($userAccessService)
+    {
+        $this->userAccessService = $userAccessService;
+        return $this;
     }
 }

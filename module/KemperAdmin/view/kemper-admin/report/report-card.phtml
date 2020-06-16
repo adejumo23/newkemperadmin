@@ -1,11 +1,47 @@
 <?php
 /**
- * @var array $report
+ * @var \KemperAdmin\Model\Entity\ReportJob $report
  */
 ?>
-<li>
 <!--
 Todo: Write a nice view for a report info card. Should have Download, rerun buttons and a span tag for viewing details (run time, created time, created by, etc)
--->
-<?php echo "report 1"; ?>
-</li>
+-->                    <div class="col-md-12 mb-4">
+    <div class="card gradient-card">
+
+        <div class="card-image" style="background-image: url(https://mdbootstrap.com/img/Photos/Horizontal/Work/4-col/img%20%2814%29.jpg)">
+<!--            --><?php //echo $report['report_title']; ?>
+            <!-- Content -->
+            <a href="#!">
+                <div class="text-white d-flex h-100 mask blue-gradient-rgba">
+                    <div class="first-content align-self-center p-3">
+                        <h3 class="card-title"><?php echo $report->getReportConfig()['report-name']; ?></h3>
+                        <p class="lead mb-0"><?php echo $report->getReportConfig()['description']; ?></p>
+                    </div>
+                    <div class="second-content align-self-center mx-auto text-center">
+                        <i class="far fa-money-bill-alt fa-3x"></i>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Data -->
+        <div class="third-content ml-auto mr-4 mb-2">
+            <p class="text-uppercase text-muted"><?=$report->getReportConfig()['report-name'];?></p>
+            <h4 class="font-weight-bold float-right">2000$</h4>
+        </div>
+
+        <!-- Content -->
+        <div class="card-body white">
+            <div class="progress md-progress">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <p class="text-muted">Better than last week (25%)</p>
+            <h4 class="text-uppercase font-weight-bold my-4">Details</h4>
+            <p class="text-muted" align="justify">Submitted On: <?=$report->getTimeSubmitted()?></p>
+            <p class="text-muted" align="justify">Generated On: <?=$report->getTimeFinished()?></p>
+        </div>
+
+    </div>
+
+    </div>

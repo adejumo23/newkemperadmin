@@ -86,22 +86,30 @@ class ReportController extends AbstractAppController
         ]));
     }
 
+    /**
+     * @return \Zend\Http\Response
+     * @throws \Exception
+     */
     public function generateReportAction()
     {
         $reportTitle = $this->getParam('report-title');
         if (empty($reportTitle)) {
             return $this->redirect()->toRoute('kemperadmin:home');
         }
-        $reportConfig = $this->reportConfigFactory->getReportConfigByTitle($reportTitle);
-        $classification = $reportConfig['report-title'];
         $formData = $this->params()->fromPost();
+        $reportConfig = $this->reportConfigFactory->getReportConfigByTitle($reportTitle);
 
-        $reportJob = new ReportJob();
-        $reportJob->setFormData($formData);
-        $reportJob->setUsername($this->identity->getUsername());
-        $reportJob->setReportTitle($reportTitle);
-        $reportid = $this->reportService->queueReport($reportJob);
-        $reportJob->setReportid($reportid);
+        $this->reportService->setRequestUrl($this->url()->fromRoute('kemperadmin:report-service'));
+
+
+        $reportJobData = [
+            'formdata' => $formData,
+            'username' => $this->identity->getUsername(),
+            'report_title' => $reportTitle
+        ];
+
+        $reportJob = $this->reportService->queueReport($reportJobData);
+        $reportid = $reportJob->getReportid();
         $status = [
             'status' => $reportid ? true : false,
             'reportData' => $reportJob,
@@ -117,8 +125,8 @@ class ReportController extends AbstractAppController
 
     public function recentReportsAction()
     {
-        $reportConfigs = $this->reportConfigFactory->getReportsByClassification('production');
-        $recentReports = $this->reportService->getRecentReports();
+//        $reportConfigs = $this->reportConfigFactory->getReportsByClassification('production');
+        $recentReports = $this->reportService->getRecentReports($this->getIdentity());
         $data = [
             'recentReports' => $recentReports
         ];

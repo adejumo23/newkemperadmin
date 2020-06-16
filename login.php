@@ -9,7 +9,7 @@ $redirect = $_GET['redirect_uri'];
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Material Design Bootstrap Template</title>
+    <title>Kemper Health - Login</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -91,7 +91,7 @@ $redirect = $_GET['redirect_uri'];
                             <div class="card-body">
 
                                 <!-- Header -->
-                                <div class="form-header purple-gradient">
+                                <div class="form-header blue-gradient">
                                     <h3 class="font-weight-500 my-2 py-1"><i class="fas fa-user"></i> Log in:</h3>
                                 </div>
 
@@ -109,7 +109,7 @@ $redirect = $_GET['redirect_uri'];
                                 </div>
 
                                 <div class="text-center">
-                                    <button class="btn purple-gradient btn-lg">Sign in</button>
+                                    <button class="btn blue-gradient btn-lg">Sign in</button>
                                     <hr class="mt-4">
                                     <div class="inline-ul text-center d-flex justify-content-center">
                                         <a class="p-2 m-2 fa-lg tw-ic"><i class="fab fa-twitter white-text"></i></a>

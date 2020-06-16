@@ -26,7 +26,7 @@ class ProductionRepository extends AbstractRepository
     {
         $this->params = [];
         $this->addDueDateCondition = '';
-        if ($filter) {
+        if ($filter['startingDate']) {
             $startingDate = $filter['startingDate'];
             $endingDate = $filter['endingDate'];
             $timeStart = strtotime(str_replace(",", "", $startingDate));
@@ -39,13 +39,19 @@ class ProductionRepository extends AbstractRepository
             //Defaults
             $startingDate = '2020-01-01';
             $endingDate = '2020-12-31';
+            $agent = '';
             $this->addDueDateCondition = " where [sra date] between ? and ? ";
             $this->params = [$startingDate, $endingDate];
         }
-        if ($filter['agent']) {
+        if($filter['agent']){
+            $agent = $filter['agent'];
+            $this->addDueDateCondition .= " and [manager #] in (select distinct right(report,2) from hierarchy where report like '000%' and manager = ? union select right(?,2))";
+            $this->params = [$startingDate, $endingDate,$agent,$agent];
+        }
+/*        if ($filter['agent']) {
             $this->addDueDateCondition .= " AND agent = ?";
             $this->params += $filter['agent'];
-        }
+        }*/
 
     }
 
@@ -117,7 +123,7 @@ SQL;
     public function getRvpData()
     {
         $query = <<<SQL
-SELECT writingNumber as [report],[Name] FROM Regional_Vice_Presidents
+SELECT writingNumber as [report],[name] FROM Regional_Vice_Presidents
 SQL;
         $result = $this->executeQuery($query, $this->params);
         return $result;
@@ -125,7 +131,7 @@ SQL;
     public function getManagerData($managerId)
     {
         $query = <<<SQL
-select report,UserFirstName+' '+UserLastName as [Name] from hierarchy inner join kams on writingNumber = report where manager = ?
+select report,UserFirstName+' '+UserLastName as [name] from hierarchy inner join kams on writingNumber = report where manager = ?
 SQL;
         $result = $this->executeQuery($query,[$managerId]);
         return $result;

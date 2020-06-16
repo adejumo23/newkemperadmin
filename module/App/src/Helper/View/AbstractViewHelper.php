@@ -40,12 +40,49 @@ class AbstractViewHelper implements ContainerAwareInterface
         $classString = $this->getClassString($element);
         $attributeString = $this->getAttributeString($element);
         $childElements = $this->getChildElementsHtml($element);
+        $labelStart = $this->getLabelStart($element);
+        $labelEnd = $this->getLabelEnd($element);
         $html = <<<HTML
+{$labelStart}
+{$labelEnd}
 <{$element->getTag()} {$nameString} {$idString} {$classString} {$attributeString} >
 {$childElements}
 </{$element->getTag()}>
+
 HTML;
         return $html;
+    }
+
+    /**
+     * @param \App\Form\Element\Input $element
+     * @return string
+     */
+    protected function getLabelStart($element)
+    {
+        $labelString = "";
+        if ($element->getLabel()) {
+            $labelString =<<<HTML
+<label for="{$element->getName()}">{$element->getLabel()}:&nbsp;&nbsp;&nbsp;&nbsp;
+HTML;
+        }
+        return $labelString;
+    }
+
+    /**
+     * @param \App\Form\Element\Input $element
+     * @return string
+     */
+    protected function getLabelEnd($element)
+    {
+        $labelString = "";
+        if ($element->getLabel()) {
+            $labelString =<<<HTML
+
+</label>
+HTML;
+        }
+        return $labelString;
+
     }
 
     /**

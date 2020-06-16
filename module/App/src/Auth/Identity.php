@@ -7,6 +7,8 @@
 namespace App\Auth;
 
 
+use App\Model\Entity\UserProfile;
+
 class Identity
 {
 
@@ -27,6 +29,16 @@ class Identity
      * @var array
      */
     protected $privs;
+
+    /**
+     * @var UserProfile
+     */
+    protected $profile;
+    /**
+     * @var int
+     */
+    protected $profileId;
+
 
     /**
      * @return string
@@ -103,6 +115,42 @@ class Identity
     public function getPriv($privName)
     {
         return $this->privs[$privName]??0;
+    }
+
+    /**
+     * @return UserProfile
+     */
+    public function getProfile()
+    {
+        return $this->profile;
+    }
+
+    /**
+     * @param UserProfile $profile
+     * @return Identity
+     */
+    public function setProfile($profile)
+    {
+        $this->profile = $profile;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProfileId()
+    {
+        return $this->profileId;
+    }
+
+    /**
+     * @param int $profileId
+     * @return Identity
+     */
+    public function setProfileId($profileId)
+    {
+        $this->profileId = $profileId;
+        return $this;
     }
 
 

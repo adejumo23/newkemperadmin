@@ -43,7 +43,6 @@ var Reports = (function ($) {
             }
         });
     }
-
     function init() {
         loadRecentReports();
         $(document).on('submit', '[name="reportgenerateform"]', handleReportGenerate)

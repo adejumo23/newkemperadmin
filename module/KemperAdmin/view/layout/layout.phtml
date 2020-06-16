@@ -15,7 +15,10 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
 $identity = $this->getEngine()->identity();
-
+if (!$identity) {
+    //temp Fix - remove later
+    $identity = new \App\Auth\Identity();
+}
 ?>
 <?= $this->doctype();?>
 
@@ -35,11 +38,20 @@ $identity = $this->getEngine()->identity();
         ->prependStylesheet($this->basePath("css/mdb.min.css"))
         ->prependStylesheet($this->basePath("css/bootstrap.min.css"))
         ->prependStylesheet($this->basePath("css/custom-kemper.css"))
-        ->prependStylesheet($this->basePath("css/font/all.css"));
+        ->prependStylesheet($this->basePath("css/font/all.css"))
+        ->prependStylesheet($this->basePath("css/addons-pro/multi-range.min.css"))
+        ->prependStylesheet($this->basePath("css/addons-pro/cards-extended.css"))
+        ->prependStylesheet($this->basePath("css/addons/datatables.css"))
+        ->prependStylesheet($this->basePath("css/addons/datatables-select.css"));
     ?>
 
     <!-- Scripts -->
+
     <?php
+    $this->inlineScript()->prependFile($this->basePath("js/addons-pro/cards-extended.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/addons-pro/multi-range.min.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/addons/datatables-select.js"));
+    $this->inlineScript()->prependFile($this->basePath("js/addons/datatables.js"));
     $this->inlineScript()->prependFile($this->basePath("js/vendor/jquery-easing/jquery.easing.min.js"));
     $this->inlineScript()->prependFile($this->basePath("js/vendor/bootstrap/js/bootstrap.bundle.min.js"));
     $this->inlineScript()->prependFile($this->basePath("js/mdb.min.js"));
@@ -95,6 +107,7 @@ $identity = $this->getEngine()->identity();
                             </ul>
                         </div>
                     </li>
+                    <?php if($identity->getPriv(MCI::PRODUCTION_DASHBOARD_VIEW)):?>
 
                     <li>
                         <a class="collapsible-header waves-effect arrow-r">
@@ -119,7 +132,9 @@ $identity = $this->getEngine()->identity();
                             </ul>
                         </div>
                     </li>
-
+                    <?php
+                    endif;
+                    ?>
                     <!-- Simple link -->
                     <li>
                         <a href="../alerts/alerts.html" class="collapsible-header waves-effect"><i
@@ -161,7 +176,7 @@ $identity = $this->getEngine()->identity();
             <ul class="nav navbar-nav nav-flex-icons ml-auto">
 
                 <!-- Dropdown -->
-                <li class="nav-item dropdown notifications-nav">
+<!--                <li class="nav-item dropdown notifications-nav">
                     <a class="nav-link dropdown-toggle waves-effect" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <span class="badge red">3</span> <i class="fas fa-bell"></i>
@@ -192,15 +207,16 @@ $identity = $this->getEngine()->identity();
                 <li class="nav-item">
                     <a class="nav-link waves-effect"><i class="far fa-comments"></i> <span
                                 class="clearfix d-none d-sm-inline-block">Support</span></a>
-                </li>
+                </li>-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle waves-effect" href="#" id="userDropdown" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-user"></i> <span class="clearfix d-none d-sm-inline-block">Profile</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="login/logout">Log Out</a>
-                        <a class="dropdown-item" href="#"><?php echo $identity->getFirstname();?></a>
+                        <a class="dropdown-item" href="<?=$this->url('kemperadmin:login:logout')?>">Log Out</a>
+                        <a class="dropdown-item" href="<?=$this->url('kemperadmin:users:edituser', ['username' => $identity->getUsername()])?>">
+                            <?php echo $identity->getFirstname();?></a>
                     </div>
                 </li>
             </ul>
@@ -219,11 +235,12 @@ $identity = $this->getEngine()->identity();
     <div class="container-fluid">
     <?= $this->content;?>
     </div>
+
 </main>
 <!-- Main layout -->
 
 <!-- Footer -->
-<footer class="page-footer pt-0 mt-5 rgba-stylish-light">
+<footer class="page-footer font-small blue">
     <!-- Copyright -->
     <div class="footer-copyright py-3 text-center">
         <div class="container-fluid">
@@ -244,7 +261,24 @@ $identity = $this->getEngine()->identity();
         wheelPropagation: true,
         minScrollbarLength: 20
     });
-
+    $(document).ready(function () {
+        $('#usersList').DataTable();
+        $('#usersList_wrapper').find('label').each(function () {
+            $(this).parent().append($(this).children());
+        });
+        $('#usersList_wrapper .dataTables_filter').find('input').each(function () {
+            const $this = $(this);
+            $this.attr("placeholder", "Search");
+            $this.removeClass('form-control-sm');
+        });
+        $('#usersList_wrapper .dataTables_length').addClass('d-flex flex-row');
+        $('#usersList_wrapper .dataTables_filter').addClass('md-form');
+        $('#usersList_wrapper select').removeClass(
+            'custom-select custom-select-sm form-control form-control-sm');
+        $('#usersList_wrapper select').addClass('mdb-select');
+        $('#usersList_wrapper .mdb-select').materialSelect();
+        $('#usersList_wrapper .dataTables_filter').find('label').remove();
+    });
 </script>
 </body>
 </html>

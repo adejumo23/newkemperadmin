@@ -40,6 +40,11 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
      */
     protected $timeFinished;
 
+    /**
+     * @var array
+     */
+    protected $reportConfig;
+
     public function preSaveHook()
     {
         $this->timeSubmitted = new DateTime();
@@ -48,7 +53,7 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
         }
     }
 
-
+    //Todo: Clean table and fields properties from entities - move them to abstractrepo
     public function setMetadata()
     {
         $this->setTable('report_jobs');
@@ -205,6 +210,25 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
             'timeStarted' => $this->timeStarted,
             'timeFinished' => $this->timeFinished,
             'formdata' => $this->formData,
+            'reportConfig' => $this->reportConfig,
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getReportConfig()
+    {
+        return $this->reportConfig;
+    }
+
+    /**
+     * @param array $reportConfig
+     * @return ReportJob
+     */
+    public function setReportConfig($reportConfig)
+    {
+        $this->reportConfig = $reportConfig;
+        return $this;
     }
 }

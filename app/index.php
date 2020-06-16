@@ -17,6 +17,15 @@ if (php_sapi_name() === 'cli-server') {
     }
     unset($path);
 }
+if (php_sapi_name() === "cli") {
+    //Console routing research
+    //do not try to map console request to http request - wont work
+    $requestURI = $argv[1];
+    $post = $argv[2];
+    $_SERVER['REQUEST_METHOD'] = 'POST';
+    $_SERVER['REQUEST_URI'] = $requestURI;
+    $_POST = json_decode($post, true);
+}
 
 // Composer autoloading
 include __DIR__ . '/../vendor/autoload.php';

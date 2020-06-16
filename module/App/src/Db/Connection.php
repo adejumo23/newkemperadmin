@@ -38,7 +38,7 @@ class Connection
      * @param array $params
      * @return ResultInterface|null
      */
-    public function executeQuery($sql, $params)
+    public function executeQuery($sql, $params = null)
     {
         $result = null;
         try {

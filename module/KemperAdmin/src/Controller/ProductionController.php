@@ -40,44 +40,80 @@ class ProductionController extends AbstractAppController
         $startDate = $this->request->getQuery('startdate');
         $endDate = $this->request->getQuery('enddate');
         $agent = $this->request->getQuery('agent');
-        $this->productionService->setAgent($agent);
-//        $sourceData = $this->productionService->getRvps();
         $this->hierarchyListTemplate->setHidden(true);
         $this->hierarchyListTemplate->setName('hierarchyForm');
         $this->hierarchyListTemplate->setUrl($this->url()->fromRoute('kemperadmin:production:hierarchydata'));
-        $data = $this->productionService->getProductionData($startDate, $endDate);
+        $data = $this->productionService->getProductionData($startDate, $endDate,$agent);
         $sourceData = $this->productionService->initRvpsData();
-//        $this->hierarchyListTemplate->setData($sourceData);
         $data['hierarchy'] = $this->hierarchyListTemplate;
         return new ViewModel($data);
     }
 
     public function hierarchyDataAction()
     {
+        $identity = $this->getIdentity();
+
+        $this->productionService->setIdentity($identity);
         $startDate = $this->request->getQuery('startdate');
         $endDate = $this->request->getQuery('enddate');
         $personnelType = $this->request->getPost('personneltype');
         $dataAttrs = (array)$this->request->getPost();
-        switch ($personnelType) {
-            case 'manager':
-                $rvpId = $this->request->getPost('listitemvalue');
-                $data = $this->productionService->initManagersFromRvps($rvpId);
-                $dataAttrs['personneltype'] = 'manager';
-                break;
-            default:
-                $this->productionService->getProductionData($startDate, $endDate);
-                $sourceData = $this->productionService->initRvpsData();
-                $data = $sourceData;
-                $dataAttrs['personneltype'] = 'manager';
+        $username = $identity->getUsername();
+
+        $user = $this->userService->findUserByUsername($username);
+        $role = $user->getRoleid();
+        switch ($role) {
+            case '1':
+                switch ($personnelType) {
+                    case 'rvp':
+                        $rvpId = $this->request->getPost('listitemvalue');
+                        $allData = $this->productionService->getProductionData($startDate, $endDate,$rvpId);
+                        $data = $this->productionService->initManagersFromRvps($rvpId);
+                        $dataAttrs['personneltype'] = 'manager';
+                        break;
+                    case 'manager':
+                        $rvpId = $this->request->getPost('listitemvalue');
+                        $allData = $this->productionService->getProductionData($startDate, $endDate,$rvpId);
+                        $data = $this->productionService->initManagersFromRvps($rvpId);
+                        $dataAttrs['personneltype'] = 'manager';
+                        break;
+                    default:
+                        $allData = $this->productionService->getProductionData($startDate, $endDate,'');
+                        $sourceData = $this->productionService->initRvpsData();
+                        $data = $sourceData;
+                        $dataAttrs['personneltype'] = 'rvp';
+            }
+        break;
+            case '4':
+                switch ($personnelType) {
+                    case 'rvp':
+                        $rvpId = $this->request->getPost('listitemvalue', $username);
+                        $allData = $this->productionService->getProductionData($startDate, $endDate,$rvpId);
+                        $data = $this->productionService->getAllowedUsersForUser($rvpId);
+                        $dataAttrs['personneltype'] = 'manager';
+                        break;
+                    case 'manager':
+                        $rvpId = $this->request->getPost('listitemvalue', $username);
+                        $allData = $this->productionService->getProductionData($startDate, $endDate,$rvpId);
+                        $data = $this->productionService->getAllowedUsersForUser($rvpId);
+                        $dataAttrs['personneltype'] = 'manager';
+                        break;
+                    default:
+                        $rvpId = $this->request->getPost('listitemvalue', $username);
+                        $allData = $this->productionService->getProductionData($startDate, $endDate,$rvpId);
+                        $data = $this->productionService->getAllowedUsersForUser($rvpId);
+                        $dataAttrs['personneltype'] = 'rvp';
+                }
         }
         $formattedData = $this->productionService->getFormattedDataSourceForHList($data);
         $this->hierarchyListTemplate->setDataAttributes($dataAttrs);
         $this->hierarchyListTemplate->setData($formattedData);
         $this->hierarchyListTemplate->setName('hierarchyForm');
         $html = $this->hierarchyListTemplate->getListHtml();
-        $jsonData =  [
+        $jsonData = [
             'success' => true,
             'data' => $html,
+            'allData' => $allData
         ];
         echo json_encode($jsonData);
         exit();

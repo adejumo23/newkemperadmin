@@ -1,7 +1,15 @@
 <?php
 /**
  * @var ViewModel $helper
+ * @var ViewModelHelper $helper
  */
+
+/**
+ * @var PhpRenderer $this
+ * @var ViewModel $reportTemplate
+ * @var string $classification
+ */
+
 
 use KemperAdmin\Form\Filter\AbstractFilter;
 use Zend\View\Helper\ViewModel;
@@ -14,83 +22,83 @@ use Zend\View\Renderer\PhpRenderer;
 ?>
 <div class="container-fluid">
     <div class="row">
-    <div class="col-lg-4 col-md-12">
-    <!-- Card -->
-    <div class="card card-cascade narrower mb-5">
-        <!-- Card image -->
-        <div class="view view-cascade gradient-card-header blue-gradient">
-            <h4 class="font-weight-500 mb-0">Report Filters</h4>
+        <div class="col-lg-4 col-md-12">
+            <!-- Card -->
+            <div class="card card-cascade narrower mb-5">
+                <!-- Card image -->
+                <div class="view view-cascade gradient-card-header blue-gradient">
+                    <h4 class="font-weight-500 mb-0">Report Filters</h4>
+                </div>
+                <!-- Card image -->
+                <!-- Card content -->
+                <div class="card-body card-body-cascade">
+                    <div class="col-md-3">
+                        <div class="row" id="reportFilters">
+                            <?php
+                            echo $reportForm->render();
+                            ?>
+                        </div>
+                    </div>
+                    <!--<p><i class="fas fa-flag mr-1" aria-hidden="true"></i> Status: <strong>Draft</strong></p>
+                    <p><i class="far fa-eye mr-1" aria-hidden="true"></i> Visibility <strong>Public</strong></p>
+                    <p><i class="fas fa-archive mr-1 mr-1" aria-hidden="true"></i> Revisions: <strong>2</strong></p>
+                    <p><i class="far fa-calendar-alt mr-1" aria-hidden="true"></i> Publish: <strong>Immediately</strong></p>
+                    <div class="text-right">
+                        <button class="btn btn-flat waves-effect">Discard</button>
+                        <button class="btn btn-primary waves-effect waves-light">Publish</button>
+                    </div>-->
+                </div>
+                <!-- Card content -->
+            </div>
+            <!-- Card -->
         </div>
-        <!-- Card image -->
-        <!-- Card content -->
-        <div class="card-body card-body-cascade">
-            <div class="col-md-3">
-            <div class="row" id="reportFilters">
-                <?php
-                echo $reportForm->render();
-                ?>
-            </div>
-            </div>
-            <!--<p><i class="fas fa-flag mr-1" aria-hidden="true"></i> Status: <strong>Draft</strong></p>
-            <p><i class="far fa-eye mr-1" aria-hidden="true"></i> Visibility <strong>Public</strong></p>
-            <p><i class="fas fa-archive mr-1 mr-1" aria-hidden="true"></i> Revisions: <strong>2</strong></p>
-            <p><i class="far fa-calendar-alt mr-1" aria-hidden="true"></i> Publish: <strong>Immediately</strong></p>
-            <div class="text-right">
-                <button class="btn btn-flat waves-effect">Discard</button>
-                <button class="btn btn-primary waves-effect waves-light">Publish</button>
-            </div>-->
-        </div>
-        <!-- Card content -->
-    </div>
-    <!-- Card -->
-</div>
-<!--<section>
-    <h3 class="mb-4 dark-grey-text font-weight-bold"><strong></strong></h3>
-    <div class="row mb-5 pb-4">
-        <div class="card card-cascade wider reverse my-4 mx-3 card-transparent">
-            <div class="view view-cascade overlay">
+        <!--<section>
+            <h3 class="mb-4 dark-grey-text font-weight-bold"><strong></strong></h3>
+            <div class="row mb-5 pb-4">
+                <div class="card card-cascade wider reverse my-4 mx-3 card-transparent">
+                    <div class="view view-cascade overlay">
 
-                <a href="#!">
-                    <div class="mask waves-effect waves-light"></div>
-                </a>
+                        <a href="#!">
+                            <div class="mask waves-effect waves-light"></div>
+                        </a>
+                    </div>
+
+                    <div class="card-body card-body-cascade text-center">
+                        <h4 class="card-title"><strong>My adventure</strong></h4>
+                        <h5 class="blue-text"><strong>Photography</strong></h5>
+
+                        <p class="card-text">Sed ut perspiciatis unde omnis iste natus sit voluptatem accusantium doloremque
+                            laudantium, totam
+                            rem aperiam.
+                        </p>
+
+                        <a class="p-2 m-2 fa-lg li-ic"><i class="fab fa-linkedin"> </i></a>
+                        <a class="p-2 m-2 fa-lg tw-ic"><i class="fab fa-twitter"> </i></a>
+                        <a class="p-2 m-2 fa-lg fb-ic"><i class="fab fa-facebook"> </i></a>
+
+                    </div>
+
+                </div>]
             </div>
 
-            <div class="card-body card-body-cascade text-center">
-                <h4 class="card-title"><strong>My adventure</strong></h4>
-                <h5 class="blue-text"><strong>Photography</strong></h5>
-
-                <p class="card-text">Sed ut perspiciatis unde omnis iste natus sit voluptatem accusantium doloremque
-                    laudantium, totam
-                    rem aperiam.
-                </p>
-
-                <a class="p-2 m-2 fa-lg li-ic"><i class="fab fa-linkedin"> </i></a>
-                <a class="p-2 m-2 fa-lg tw-ic"><i class="fab fa-twitter"> </i></a>
-                <a class="p-2 m-2 fa-lg fb-ic"><i class="fab fa-facebook"> </i></a>
-
-            </div>
-
-        </div>]
-    </div>
-
-</section>-->
+        </section>-->
         <div class="col-lg-8 col-md-12">
 
             <!-- Card -->
             <div class="card card-cascade narrower">
 
                 <!-- Card image -->
-                <div class="view view-cascade gradient-card-header purple-gradient">
+                <div class="view view-cascade gradient-card-header blue-gradient">
 
                     <h2 class="card-header-title">Recent Reports</h2>
 
                     <div class="text-center">
 
                         <!-- Facebook -->
-                        <a type="button" class="btn-floating btn-small waves-effect waves-light"><i class="fas fa-download"></i></a>
+<!--                        <a type="button" class="btn-floating btn-small waves-effect waves-light"><i class="fas fa-download"></i></a>-->
 
                         <!-- Twitter -->
-                        <a type="button" class="btn-floating btn-small waves-effect waves-light"><i class="fas fa-redo"></i></a>
+<!--                        <a type="button" class="btn-floating btn-small waves-effect waves-light"><i class="fas fa-redo"></i></a>-->
 
                     </div>
                 </div>
@@ -103,6 +111,11 @@ use Zend\View\Renderer\PhpRenderer;
                         <span class="loading-reports">Loading...</span>
                         <span style="display: none" class="no-recent-reports">No recent reports to show.</span>
                     <div class="row" id="reportStatus" data-url="<?= $this->url('kemperadmin:recentreports') ?>"></div>
+<?php
+                        $this->render((new \Zend\View\Model\ViewModel(['recentReports' => $recentReports]))->setTemplate('kemper-admin/report/recent-reports'));
+                        ?>
+                        <!-- Card -->
+                    <!--Grid column-->
                     </p>
 
                 </div>
@@ -114,4 +127,5 @@ use Zend\View\Renderer\PhpRenderer;
         </div>
     </div>
 </div>
+
 

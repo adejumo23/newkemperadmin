@@ -35,20 +35,20 @@ use Zend\View\Renderer\PhpRenderer; ?>
 </a>
 <section class="mt-md-4 pt-md-2 mb-5">
     <!-- First row -->
-    <div class="row">
+    <div class="row allCards">
 
         <!-- First column -->
         <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
 
             <!-- Card -->
-            <div class="card card-cascade cascading-admin-card">
+            <div class="card card-cascade cascading-admin-card sales-card-whole">
 
                 <!-- Card Data -->
-                <div class="admin-up">
+                <div class="admin-up salesCard">
                     <i class="far fa-money-bill-alt primary-color mr-3 z-depth-2"></i>
-                    <div class="data">
+                    <div class="data salesData" id="sales-data-state">
                         <p class="text-uppercase">Total Sales</p>
-                        <h4 class="font-weight-bold ">$<?= number_format($newSales) ?></h4>
+                        <h4 class="font-weight-bold salesNumber">$<?= number_format($newSales) ?></h4>
                     </div>
                 </div>
 
@@ -74,11 +74,11 @@ use Zend\View\Renderer\PhpRenderer; ?>
             <div class="card card-cascade cascading-admin-card">
 
                 <!-- Card Data -->
-                <div class="admin-up">
+                <div class="admin-up refundCard">
                     <i class="far fa-money-bill-alt warning-color mr-3 z-depth-2"></i>
-                    <div class="data">
+                    <div class="data refundData" id="refund-data-card">
                         <p class="text-uppercase">Total Refunds</p>
-                        <h4 class="font-weight-bold ">$<?= number_format($refunds) ?></h4>
+                        <h4 class="font-weight-bold refundNumber">$<?= number_format($refunds) ?></h4>
                     </div>
                 </div>
 
@@ -104,11 +104,11 @@ use Zend\View\Renderer\PhpRenderer; ?>
             <div class="card card-cascade cascading-admin-card">
 
                 <!-- Card Data -->
-                <div class="admin-up">
+                <div class="admin-up netCard">
                     <i class="fas fa-chart-pie light-blue lighten-1 mr-3 z-depth-2"></i>
-                    <div class="data">
+                    <div class="data netData" id="net-data-card">
                         <p class="text-uppercase">Total Net</p>
-                        <h4 class="font-weight-bold ">$<?= number_format($net) ?></h4>
+                        <h4 class="font-weight-bold netNumber">$<?= number_format($net) ?></h4>
                     </div>
                 </div>
 
@@ -134,17 +134,157 @@ use Zend\View\Renderer\PhpRenderer; ?>
 </section>
 <!-- Section: Analytical panel -->
 
+<section class="mb-5">
+
+    <!-- Card -->
+    <div class="card card-cascade narrower">
+
+        <!-- Section: Chart -->
+        <section>
+
+            <!-- Grid row -->
+            <div class="row">
+
+                <!-- Grid column -->
+                <div class="col-xl-6 col-lg-12 mr-0 pb-2">
+
+                    <!-- Card image -->
+                    <div class="view view-cascade gradient-card-header light-blue lighten-1">
+                        <h2 class="h2-responsive mb-0 font-weight-500">Production Filter</h2>
+                    </div>
+
+                    <!-- Card content -->
+                    <div class="card-body card-body-cascade pb-0">
+
+                        <!-- Panel data -->
+                        <div class="row py-3 pl-4">
+
+                            <!-- First column -->
+                            <div class="col-md-6">
+
+                                <!-- Date select -->
+<!--                                --><?php //echo $this->render($chartdatafilterdropdown);?>
+                                <!-- Date pickers -->
+                                <div class="md-form">
+                                    <input placeholder="Selected date" type="text" id="from" class="form-control datepicker">
+                                    <label for="date-picker-example">From</label>
+                                </div>
+                                <div class="md-form">
+                                    <input placeholder="Selected date" type="text" id="to" class="form-control datepicker">
+                                    <label for="date-picker-example">To</label>
+                                </div>
+                            </div>
+                            <!-- First column -->
+
+                            <!-- Second column -->
+                            <div class="col-md-6 text-right pl-xl-2 my-md-0 my-3">
+
+                                <!-- Summary -->
+                                <p>Total Disposed: <strong></strong>
+                                    <button type="button" class="btn btn-info btn-sm p-2" data-toggle="tooltip" data-placement="top"
+                                            title="Total bills that have been disposed"><i class="fas fa-question"></i></button>
+                                </p>
+                                <p>Total Un-disposed: <strong></strong>
+                                    <button type="button" class="btn btn-info btn-sm p-2 mr-0" data-toggle="tooltip"
+                                            data-placement="top" title="Total bills that have not been disposed"><i
+                                                class="fas fa-question"></i></button>
+                                </p>
+
+                                <!-- Change chart -->
+                                <!--                                <span class="min-chart my-4" id="chart-sales" data-percent="76"><span
+                                                                        class="percent"></span></span>
+                                                                <h5>-->
+                                <span class="badge red accent-2 p-2">Change <i class="fas fa-arrow-circle-up ml-1"></i></span>
+                                <button type="button" class="btn btn-info btn-sm p-2" data-toggle="tooltip" data-placement="top"
+                                        title="Percentage change compared to the same period in the past"><i
+                                            class="fas fa-question"></i>
+                                </button>
+                                </h5>
+
+                            </div>
+                            <!-- Second column -->
+
+                        </div>
+                        <!-- Panel data -->
+
+                    </div>
+                    <!-- Card content -->
+
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <input type="hidden" name="disposerDataUrl" value="<?=$disposerDataUrl?>">
+<!--                <input type="hidden" name="dispositionDataUrl" value="<?/*=$dispositionDataUrl*/?>">
+                <input type="hidden" name="productStatsDataUrl" value="<?/*=$productStatsDataUrl*/?>">-->
+                <div class="col-xl-6 col-lg-12 mb-4 pb-2">
+                    <!-- Chart -->
+                    <div class="view view-cascade gradient-card-header blue-gradient chart-area-sales">
+                        <canvas id="kemperDashboardSales" height="175"></canvas>
+                    </div>
+
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+
+        </section>
+        <!-- Section: Chart -->
+
+
+    </div>
+    <!-- Card -->
+
+</section>
+<section class="mb-5">
+
+    <!-- Card -->
+    <div class="card card-cascade narrower">
+
+        <!-- Section: Chart -->
+        <section>
+
+            <!-- Grid row -->
+            <div class="row">
+
+                <!-- Grid column -->
+                <!-- Grid column -->
+                <div class="col-xl-6 col-lg-12 mb-4 pb-2">
+
+                    <!-- Chart -->
+                    <div class="view view-cascade gradient-card-header blue-gradient chart-area-refunds">
+                        <canvas id="kemperDashboardRefunds" height="175"></canvas>
+                    </div>
+
+                </div>
+
+                <!-- Grid column -->
+                <div class="col-xl-6 col-lg-12 mb-4 pb-2">
+                    <!-- Chart -->
+                    <div class="view view-cascade gradient-card-header blue-gradient chart-area-net">
+                        <canvas id="kemperDashboardNet" height="175"></canvas>
+                    </div>
+
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+
+        </section>
+        <!-- Section: Chart -->
+
+
+    </div>
+    <!-- Card -->
+
+</section>
+
 
 <?php
 $this->inlineScript()->appendFile($this->basePath("js/kemperadmin/production-dashboard.js"));
-/*return;
-include_once __DIR__.'/KemperDashboardData.php';
-$kemperData = new KemperDashboardData($filterData);
-$data = $kemperData->getDetails();
-$newSales = number_format($data[0]['New sales']);
-$refunds = number_format($data[0]['refunds']);
-$net = number_format($data[0]['Net']);*/
-
+$this->inlineScript()->appendFile($this->basePath("js/filters/daterange.js"));
 ?>
 
 

@@ -9,6 +9,7 @@ use App\Di\ContainerAwareInterface;
 use App\Form\Element\Anchor;
 use App\Form\Element\Button;
 use App\Form\Element\Form;
+use App\Form\Element\Input;
 use App\Form\Element\SubmitButton;
 use App\Form\Element\ElementGroup;
 use App\Helper\View\AbstractViewHelper;
@@ -31,6 +32,7 @@ class FormFactory implements AbstractFactoryInterface
         HierarchyList::class => HLView::class,
         HierarchyListItem::class => HLIView::class,
         Anchor::class => \App\Helper\View\Anchor::class,
+        Input::class => \App\Helper\View\Input::class,
         Button::class => AbstractViewHelper::class,
         ElementGroup::class => AbstractViewHelper::class,
         SubmitButton::class => AbstractViewHelper::class,

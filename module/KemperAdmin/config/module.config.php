@@ -31,6 +31,16 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:login:logout' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/login/logout',
+                    'defaults' => [
+                        'controller' => Controller\LoginController::class,
+                        'action'     => 'logout',
+                    ],
+                ],
+            ],
             'kemperadmin:api' => [
                 'type'    => Literal::class,
                 'options' => [
@@ -60,6 +70,16 @@ return [
                         'controller' => Controller\ReportController::class,
                         'action'     => 'reportCenter',
                         'classification' => '',
+                    ],
+                ],
+            ],
+            'kemperadmin:report-service' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/reportService',
+                    'defaults' => [
+                        'controller' => Controller\ReportServiceController::class,
+                        'action'     => 'index',
                     ],
                 ],
             ],
@@ -136,6 +156,27 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:users' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/users',
+                    'defaults' => [
+                        'controller' => Controller\UsersController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'kemperadmin:users:edituser' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/users/:username',
+                    'defaults' => [
+                        'controller' => Controller\UsersController::class,
+                        'action'     => 'edit',
+                        'username' => '',
+                    ],
+                ],
+            ],
             'kemperadmin:production:productiondata' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -167,6 +208,7 @@ return [
             Controller\ApiController::class => InvokableFactory::class,
             Controller\ConservationController::class => InvokableFactory::class,
             Controller\ProductionController::class => InvokableFactory::class,
+            Controller\UsersController::class => InvokableFactory::class,
         ],
     ],
     'service_manager' => [

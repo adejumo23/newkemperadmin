@@ -236,12 +236,8 @@ function toolTips() {
 $(document).ready(function () {
 // Data Picker Initialization
     $('.datepicker').pickadate();
-    // materialSelect ();
     toolTips();
     filterDisposerData();
     dispositionChart();
     productStatsChart();
-    // filterYearlyDisposerData();
-    // displayChart();
-    // mainChart()
 });

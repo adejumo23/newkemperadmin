@@ -17,4 +17,5 @@ SQL;
         $privs = $this->executeQuery($query,[$username]);
         return reset($privs);
     }
+
 }
