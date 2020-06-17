@@ -43,10 +43,16 @@ var Reports = (function ($) {
             }
         });
     }
+
+    function handleDownloadReport() {
+        var reportid = $(this).data('reportid');
+        var url = $(this).data('url') + reportid;
+        window.location.replace(url);
+    }
     function init() {
         loadRecentReports();
         $(document).on('submit', '[name="reportgenerateform"]', handleReportGenerate)
-
+        $(document).on('click', '.download-report-button', handleDownloadReport);
     }
 
     return {

@@ -44,6 +44,10 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
      * @var array
      */
     protected $reportConfig;
+    /**
+     * @var string
+     */
+    protected $filename;
 
     public function preSaveHook()
     {
@@ -65,6 +69,7 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
         $this->addField('timeSubmitted', 'timesubmitted', 'datetime');
         $this->addField('timeStarted', 'timestarted', 'datetime');
         $this->addField('timeFinished', 'timefinished', 'datetime');
+        $this->addField('filename', 'filename', 'string');
     }
 
     /**
@@ -211,6 +216,7 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
             'timeFinished' => $this->timeFinished,
             'formdata' => $this->formData,
             'reportConfig' => $this->reportConfig,
+            'filename' => $this->filename,
         ];
     }
 
@@ -229,6 +235,24 @@ class ReportJob extends AbstractEntity implements \JsonSerializable
     public function setReportConfig($reportConfig)
     {
         $this->reportConfig = $reportConfig;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param string $filename
+     * @return ReportJob
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
         return $this;
     }
 }

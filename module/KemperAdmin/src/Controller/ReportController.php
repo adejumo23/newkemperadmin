@@ -98,9 +98,7 @@ class ReportController extends AbstractAppController
         }
         $formData = $this->params()->fromPost();
         $reportConfig = $this->reportConfigFactory->getReportConfigByTitle($reportTitle);
-
         $this->reportService->setRequestUrl($this->url()->fromRoute('kemperadmin:report-service'));
-
 
         $reportJobData = [
             'formdata' => $formData,
@@ -122,13 +120,44 @@ class ReportController extends AbstractAppController
     {
 
     }
+    public function downloadAction()
+    {
+        $reportId = $this->params('reportid');
+        $report = $this->reportService->getReportById($reportId);
+        $filename = $report->getFilename();
+        $reportPath = $this->container->getContainer()->get('config')['reportConfig']['report_save_location'];
+        $fullFilePath = $reportPath . $filename;
+        $extension = pathinfo($fullFilePath, PATHINFO_EXTENSION);
+        switch ($extension) {
+            case 'csv':
+                header("Content-type: text/csv");
+                header("Content-Disposition: attachment; filename={$filename}");
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                break;
+            case 'xlsx':
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename='.basename($fullFilePath));
+                header('Content-Transfer-Encoding: binary');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($fullFilePath));
+                break;
+        }
+        readfile($fullFilePath);
+        exit();
+    }
 
     public function recentReportsAction()
     {
 //        $reportConfigs = $this->reportConfigFactory->getReportsByClassification('production');
         $recentReports = $this->reportService->getRecentReports($this->getIdentity());
+        $reportDownloadUrl = $this->url()->fromRoute('kemperadmin:downloadreport');
         $data = [
-            'recentReports' => $recentReports
+            'recentReports' => $recentReports,
+            'reportDownloadUrl' => $reportDownloadUrl,
         ];
         /** @var PhpRenderer $viewRenderer */
         $phpRenderer = $this->container->getContainer()->get('ViewRenderer');

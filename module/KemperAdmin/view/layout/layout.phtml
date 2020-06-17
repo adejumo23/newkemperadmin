@@ -215,7 +215,7 @@ if (!$identity) {
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="<?=$this->url('kemperadmin:login:logout')?>">Log Out</a>
-                        <a class="dropdown-item" href="<?=$this->url('kemperadmin:users:edituser', ['username' => $identity->getUsername()])?>">
+                        <a class="dropdown-item" href="<?=$this->url('kemperadmin:users')?>">
                             <?php echo $identity->getFirstname();?></a>
                     </div>
                 </li>

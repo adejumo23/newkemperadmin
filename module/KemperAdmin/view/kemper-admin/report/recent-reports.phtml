@@ -1,10 +1,11 @@
 <?php
 /**
  * @var \KemperAdmin\Model\Entity\ReportJob[] $recentReports
+ * @var string $reportDownloadUrl
  */
 ?>
     <?php
     foreach ($recentReports as $report) {
-        echo $this->render((new \Zend\View\Model\ViewModel(['report' => $report]))->setTemplate('kemper-admin/report/report-card'));
+        echo $this->render((new \Zend\View\Model\ViewModel(['report' => $report, 'reportDownloadUrl' => $reportDownloadUrl,]))->setTemplate('kemper-admin/report/report-card'));
     }
     ?>

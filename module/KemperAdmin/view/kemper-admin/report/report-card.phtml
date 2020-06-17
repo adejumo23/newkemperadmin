@@ -1,7 +1,22 @@
 <?php
 /**
  * @var \KemperAdmin\Model\Entity\ReportJob $report
+ * @var string $reportDownloadUrl
  */
+$downloadButton = <<<HTML
+<a href="#" class="download-report-button" data-reportid="{$report->getReportid()}" data-url="{$reportDownloadUrl}">
+<i class="fas fa-download"></i> Download Report
+</a>
+HTML;
+
+if ($report->getTimeFinished() != null) {
+    $reportStatus = "Generated on " . $report->getTimeFinished();
+    $showDownload = true;
+}else{
+    $reportStatus = "Generating...";
+    $showDownload = false;
+}
+
 ?>
 <!--
 Todo: Write a nice view for a report info card. Should have Download, rerun buttons and a span tag for viewing details (run time, created time, created by, etc)
@@ -39,7 +54,14 @@ Todo: Write a nice view for a report info card. Should have Download, rerun butt
             <p class="text-muted">Better than last week (25%)</p>
             <h4 class="text-uppercase font-weight-bold my-4">Details</h4>
             <p class="text-muted" align="justify">Submitted On: <?=$report->getTimeSubmitted()?></p>
-            <p class="text-muted" align="justify">Generated On: <?=$report->getTimeFinished()?></p>
+            <p class="text-muted" align="justify">Status: <?=$reportStatus?></p>
+            <div>
+                <?php
+                if ($showDownload) {
+                    echo $downloadButton;
+                }
+                ?>
+            </div>
         </div>
 
     </div>

@@ -104,6 +104,17 @@ return [
                     ],
                 ],
             ],
+            'kemperadmin:downloadreport' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/reportcenter/download/:reportid',
+                    'defaults' => [
+                        'controller' => Controller\ReportController::class,
+                        'action'     => 'download',
+                        'reportid' => '',
+                    ],
+                ],
+            ],
             'kemperadmin:conservation' => [
                 'type'    => Literal::class,
                 'options' => [

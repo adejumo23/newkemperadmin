@@ -56,5 +56,5 @@ return [
 
         ],
     ],
-    'report_save_location' => "C:\\devroot\\reports",
+    'report_save_location' => "C:\\devroot\\reports\\",
 ];

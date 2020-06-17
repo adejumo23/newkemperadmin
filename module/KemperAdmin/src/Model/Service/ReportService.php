@@ -98,6 +98,15 @@ class ReportService implements InjectableInterface
     }
 
     /**
+     * @param int $reportId
+     * @return ReportJob|array|null
+     */
+    public function getReportById($reportId)
+    {
+        return $this->reportJobRepo->findOneBy(['id' => $reportId]);
+    }
+
+    /**
      * @param $reportId
      * @return bool
      * @throws \Exception
@@ -181,6 +190,7 @@ class ReportService implements InjectableInterface
         $this->reportConfigFactory = $reportConfigFactory;
         return $this;
     }
+
 
 
 }
